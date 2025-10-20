@@ -346,6 +346,73 @@ async function startServer() {
         }
     });
 
+    app.post('/employee/scan-attendance', async (req, res) => {
+    const { userId } = req.body;
+    const today = new Date().toISOString().split('T')[0];
+    const attendanceId = `${userId}_${today}`;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: 'Scanned User ID is required.' });
+    }
+
+    try {
+        // Step 1: Verify the employee exists in the database
+        const userParams = {
+            TableName: USERS_TABLE,
+            Key: { userId }
+        };
+        const { Item: employee } = await dynamoDb.get(userParams).promise();
+
+        if (!employee) {
+            return res.status(404).json({ success: false, message: `Employee with ID ${userId} not found.` });
+        }
+
+        // Step 2: Check for an existing attendance record for today
+        const attendanceParams = {
+            TableName: ATTENDANCE_TABLE,
+            Key: { attendanceId }
+        };
+        const { Item: attendanceRecord } = await dynamoDb.get(attendanceParams).promise();
+        
+        const currentTime = new Date();
+        const timeString = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+        if (!attendanceRecord) {
+            // No record, so this is a Check-In
+            const checkInParams = {
+                TableName: ATTENDANCE_TABLE,
+                Item: {
+                    attendanceId: attendanceId,
+                    userId: userId,
+                    date: today,
+                    checkInTime: currentTime.toISOString()
+                }
+            };
+            await dynamoDb.put(checkInParams).promise();
+            return res.json({ success: true, message: `Check-in successful at ${timeString}.`, name: employee.name });
+
+        } else if (attendanceRecord.checkInTime && !attendanceRecord.checkOutTime) {
+            // Already checked in, this is a Check-Out
+            const checkOutParams = {
+                TableName: ATTENDANCE_TABLE,
+                Key: { attendanceId },
+                UpdateExpression: 'set checkOutTime = :time',
+                ExpressionAttributeValues: { ':time': currentTime.toISOString() },
+                ConditionExpression: 'attribute_exists(attendanceId) AND attribute_not_exists(checkOutTime)'
+            };
+            await dynamoDb.update(checkOutParams).promise();
+            return res.json({ success: true, message: `Check-out successful at ${timeString}.`, name: employee.name });
+            
+        } else {
+            // Already checked in and out for the day
+            return res.status(400).json({ success: false, message: 'Attendance already completed for today.', name: employee.name });
+        }
+
+    } catch (error) {
+        console.error("Scan Attendance Error:", error);
+        res.status(500).json({ success: false, message: 'An internal server error occurred.' });
+    }
+});
     // Start server
     app.listen(PORT, () => {
         console.log(`Xeta Solutions server running on http://localhost:${PORT}`);
@@ -353,5 +420,4 @@ async function startServer() {
 }
 
 startServer();
-
 
