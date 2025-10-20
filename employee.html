@@ -87,7 +87,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3000';
+        const API_URL = window.location.origin; // Dynamically set the API URL based on the current domain
         let user = JSON.parse(localStorage.getItem('xetaUser'));
         const token = localStorage.getItem('xetaToken');
         
@@ -123,7 +123,7 @@
             const profileCardContainer = document.getElementById('profileCardContainer');
             profileCardContainer.innerHTML = `
                 <div class="p-6 text-center">
-                    <img src="${user.profilePicUrl || 'https://placehold.co/120x120/e2e8f0/334155?text=PIC'}" alt="Profile Picture" class="w-24 h-24 rounded-full mx-auto border-4 border-slate-200 object-cover">
+                    <img src="${user.profilePic || 'https://placehold.co/120x120/e2e8f0/334155?text=PIC'}" alt="Profile Picture" class="w-24 h-24 rounded-full mx-auto border-4 border-slate-200 object-cover">
                     <h2 class="mt-4 text-xl font-bold text-slate-800">${user.name}</h2>
                     <p class="text-sm text-slate-500">${user.designation}</p>
                 </div>
@@ -159,7 +159,7 @@
                 const result = await response.json();
                 if (result.success) {
                     showNotification('Profile picture updated!');
-                    user.profilePicUrl = result.newUrl;
+                    user.profilePic = result.newUrl; // Changed from profilePicUrl to profilePic
                     localStorage.setItem('xetaUser', JSON.stringify(user));
                     loadProfile();
                 } else {
