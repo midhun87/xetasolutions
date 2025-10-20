@@ -233,7 +233,7 @@
     <div id="toast-container" class="fixed bottom-5 right-5 z-[100] space-y-3 w-80"></div>
     
     <script>
-        const API_URL = "http://localhost:3000";
+        const API_URL = ""; // Use relative path for deployed app
         const token = localStorage.getItem("xetaToken");
 
         window.onload = function() {
@@ -346,6 +346,10 @@
         async function fetchEmployees() {
             try {
                 const res = await fetch(`${API_URL}/management/employees`, { headers: { Authorization: `Bearer ${token}` } });
+                if (res.status === 403) {
+                    logout();
+                    return;
+                }
                 if (!res.ok) throw new Error('Failed to fetch employees');
                 const employees = await res.json();
                 document.getElementById('totalEmployees').textContent = employees.length;
