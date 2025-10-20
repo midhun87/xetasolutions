@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xeta Solutions | Intelligent Learning, Assessment, and Hiring</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://placehold.co/64x64/7c3aed/ffffff?text=X&font=inter">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f8fafc; /* Use slate-50 */
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #6d28d9, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-bg {
+             background-color: #ffffff;
+             background-image: 
+                radial-gradient(circle at 15% 50%, #f3e8ff, transparent 30%),
+                radial-gradient(circle at 85% 70%, #e0e7ff, transparent 30%),
+                radial-gradient(#f1f5f9 1px, transparent 1px);
+             background-size: 100% 100%, 100% 100%, 20px 20px;
+        }
+
+        /* Entrance animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-glow {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 1px solid #e2e8f0; /* slate-200 */
+        }
+        .card-glow:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.07), 0 8px 10px -6px rgb(0 0 0 / 0.07);
+            border-color: #c4b5fd; /* violet-300 */
+        }
+        
+        .team-avatar-ring {
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .team-avatar-ring:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 6px #c4b5fd; /* violet-300 */
+        }
+
+        /* Modal animations */
+        #team-modal-content {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        #team-modal.open #team-modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        #team-modal #modal-img {
+            transition: transform 0.3s ease;
+        }
+        #team-modal #modal-img:hover {
+            transform: scale(1.05);
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-input-styled {
+            background-color: #f1f5f9; /* slate-100 */
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            -webkit-appearance: none;
+        }
+        .form-input-styled:focus {
+            background-color: #ffffff;
+            border-color: #7c3aed; /* violet-500 */
+            box-shadow: none;
+            outline: none;
+            ring-width: 0;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+     <!-- Navigation Bar -->
+    <nav id="navbar" class="bg-white/70 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex-shrink-0 flex items-center space-x-3">
+                    <img class="h-9 w-9 rounded-md" src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760704788/XETA_SOLUTIONS_bt6bgn.jpg" alt="Xeta Solutions Logo">
+                    <span class="text-2xl font-bold text-slate-900 tracking-tight">Xeta Solutions</span>
+                </a>
+                
+                <!-- Desktop Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-slate-600 hover:text-violet-600 transition-colors duration-300 text-sm font-semibold">About</a>
+                    <a href="#ecosystem" class="text-slate-600 hover:text-violet-600 transition-colors duration-300 text-sm font-semibold">Ecosystem</a>
+                    <a href="#team" class="text-slate-600 hover:text-violet-600 transition-colors duration-300 text-sm font-semibold">Team</a>
+                    <a href="#values" class="text-slate-600 hover:text-violet-600 transition-colors duration-300 text-sm font-semibold">Values</a>
+                    <a href="#contact" class="text-slate-600 hover:text-violet-600 transition-colors duration-300 text-sm font-semibold">Contact</a>
+                    <a href="/login.html" class="text-slate-600 hover:text-violet-600 transition-colors duration-300 text-sm font-semibold">Login</a>
+
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-slate-600 hover:text-violet-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-violet-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg id="menu-open-icon" class="h-6 w-6 block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+                        <svg id="menu-close-icon" class="h-6 w-6 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-slate-200">
+                <a href="#about" class="mobile-nav-link text-gray-600 hover:bg-slate-100 hover:text-violet-700 block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#ecosystem" class="mobile-nav-link text-gray-600 hover:bg-slate-100 hover:text-violet-700 block px-3 py-2 rounded-md text-base font-medium">Ecosystem</a>
+                <a href="#team" class="mobile-nav-link text-gray-600 hover:bg-slate-100 hover:text-violet-700 block px-3 py-2 rounded-md text-base font-medium">Team</a>
+                <a href="#values" class="mobile-nav-link text-gray-600 hover:bg-slate-100 hover:text-violet-700 block px-3 py-2 rounded-md text-base font-medium">Values</a>
+                <a href="#contact" class="mobile-nav-link text-gray-600 hover:bg-slate-100 hover:text-violet-700 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative pt-40 pb-32 hero-bg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl leading-tight fade-in-up">
+                    <span class="block text-slate-900">Intelligent Automation for</span>
+                    <span class="block gradient-text mt-2">Learning, Assessment & Hiring</span>
+                </h1>
+                <p class="mt-8 max-w-3xl mx-auto text-lg text-slate-600 leading-relaxed fade-in-up" style="transition-delay: 150ms;">
+                    We bridge the gap between education and employability by creating products that merge AI innovation with human potential.
+                </p>
+                <div class="mt-12 flex justify-center gap-4 fade-in-up" style="transition-delay: 300ms;">
+                    <a href="#ecosystem" class="inline-flex items-center justify-center px-8 py-4 border border-transparent rounded-full shadow-lg text-base font-semibold text-white bg-violet-600 hover:bg-violet-700 transition-all duration-300 transform hover:scale-105">
+                        Explore Our Ecosystem
+                    </a>
+                    <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 border border-transparent rounded-full text-base font-semibold text-violet-700 bg-violet-100 hover:bg-violet-200 transition-all duration-300 transform hover:scale-105">
+                        Get In Touch
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- About Us Section -->
+        <section id="about" class="py-28 sm:py-36 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:grid lg:grid-cols-2 lg:gap-24 lg:items-center">
+                    <div class="fade-in-up">
+                        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">Next-Generation Technology, Human-Centered Solutions</h2>
+                        <p class="mt-6 text-lg text-slate-600 leading-relaxed">
+                            Xeta Solutions is a next-generation technology startup focused on transforming learning, assessment, and hiring through intelligent, data-driven automation. Our mission is to bridge the gap between education and employability by creating products that merge AI innovation with human potential.
+                        </p>
+                        <p class="mt-4 text-lg text-slate-600 leading-relaxed">
+                            Our flagship platform, Testify-LAC, empowers institutions and organizations to conduct AI-powered assessments, proctored exams, and interactive learning experiences. Testify goes beyond traditional testing — it measures capability, not just correctness.
+                        </p>
+                    </div>
+                    <div class="mt-12 lg:mt-0 fade-in-up" style="transition-delay: 150ms;">
+                        <img class="rounded-3xl shadow-xl w-full" src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop" alt="Team collaborating on a project">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision and Mission Section -->
+        <section class="py-28 sm:py-36">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+                    <!-- Vision -->
+                    <div class="fade-in-up">
+                        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">🚀 Our Vision</h2>
+                        <p class="mt-6 text-lg text-slate-600 leading-relaxed">
+                            To become a global leader in AI-driven learning and hiring solutions, empowering every learner and organization to measure, improve, and achieve excellence through intelligent automation and data insight.
+                        </p>
+                    </div>
+                    <!-- Mission -->
+                    <div class="fade-in-up" style="transition-delay: 150ms;">
+                        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">🎯 Our Mission</h2>
+                        <ul class="mt-6 space-y-4">
+                            <li class="flex items-start">
+                                <svg class="flex-shrink-0 h-6 w-6 text-violet-500 mr-3 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span class="text-lg text-slate-600">Revolutionize assessments by integrating AI, automation, and adaptive learning.</span>
+                            </li>
+                             <li class="flex items-start">
+                                <svg class="flex-shrink-0 h-6 w-6 text-violet-500 mr-3 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span class="text-lg text-slate-600">Bridge education and industry through transparent, skill-based hiring.</span>
+                            </li>
+                             <li class="flex items-start">
+                                <svg class="flex-shrink-0 h-6 w-6 text-violet-500 mr-3 mt-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <span class="text-lg text-slate-600">Foster continuous learning through gamified quizzes and personalized feedback.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Ecosystem Section -->
+        <section id="ecosystem" class="py-28 sm:py-36 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl fade-in-up">🧩 Our Ecosystem</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600 fade-in-up" style="transition-delay: 150ms;">
+                        A complete suite of platforms for learning, assessment, and hiring — built with precision, automation, and impact.
+                    </p>
+                </div>
+                <div class="mt-20 grid gap-10 md:grid-cols-1 lg:grid-cols-3">
+                    <!-- Product Card 1: Testify-LAC -->
+                    <a href="https://www.testify-lac.com/welcome" target="_blank" rel="noopener noreferrer" class="block card-glow bg-white rounded-3xl overflow-hidden fade-in-up">
+                        <div class="p-8">
+                            <div class="flex items-center gap-4">
+                                <img class="h-16 w-16 rounded-2xl object-contain" src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1756037774/Gemini_Generated_Image_eu0ib0eu0ib0eu0i_z0amjh.png" alt="Testify-LAC Logo">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900">Testify-LAC</h3>
+                                    <p class="text-violet-600 font-semibold">AI Testing Platform</p>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-slate-600">The core AI-powered testing platform for smart assessments, proctored exams, and certifications.</p>
+                        </div>
+                    </a>
+                    <!-- Product Card 2: QuizCom -->
+                    <a href="https://www.testify-lac.com/student/quiz-join.html" target="_blank" rel="noopener noreferrer" class="block card-glow bg-white rounded-3xl overflow-hidden fade-in-up" style="transition-delay: 150ms;">
+                        <div class="p-8">
+                            <div class="flex items-center gap-4">
+                                 <img class="h-16 w-16 rounded-2xl object-contain" src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760086493/QuizCom_u5wzcp.png" alt="QuizCom Logo">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900">QuizCom</h3>
+                                    <p class="text-indigo-600 font-semibold">Interactive Quizzing</p>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-slate-600">A real-time, competitive quizzing extension for education, training, and corporate engagement.</p>
+                        </div>
+                    </a>
+                    <!-- Product Card 3: HireWithUS -->
+                    <a href="https://www.testify-lac.com/HireWithUS.html" target="_blank" rel="noopener noreferrer" class="block card-glow bg-white rounded-3xl overflow-hidden fade-in-up" style="transition-delay: 300ms;">
+                        <div class="p-8">
+                            <div class="flex items-center gap-4">
+                                 <img class="h-16 w-16 rounded-2xl object-contain" src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760086493/HireWithUS_wtn0pc.png" alt="HireWithUS Logo">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900">HireWithUS</h3>
+                                    <p class="text-purple-600 font-semibold">Skill-Based Recruitment</p>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-slate-600">Redefines recruitment by integrating skills-based testing, AI evaluation, and interview automation.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="text-center mt-12 fade-in-up">
+                    <p class="text-slate-500 font-medium"><b>Future Add-ons:</b> AI-based Interview Evaluators, College Integration Suites, and Corporate L&D tools.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meet the Team Section -->
+        <section id="team" class="py-28 sm:py-36">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl fade-in-up">Meet the Innovators</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600 fade-in-up" style="transition-delay: 150ms;">A passionate team of builders, thinkers, and educators.</p>
+                </div>
+                <div class="mt-20 flex justify-center gap-10 md:gap-16 flex-wrap">
+                    <!-- Team Member Card: Midhun Kotagiri -->
+                    <div class="text-center cursor-pointer fade-in-up"
+                        data-name="Midhun Kotagiri"
+                        data-title="Founder & CEO"
+                        data-quote="Our vision is to build technology that makes learning more accessible and more powerful for every student, everywhere."
+                        data-img="https://res.cloudinary.com/dpz44zf0z/image/upload/v1758718874/DSC_1016_dnqxtn.jpg"
+                        data-bio="Midhun is the visionary behind Xeta Solutions, driven by a passion for leveraging technology to create accessible and impactful educational experiences. With a background in software engineering and a keen eye for innovation, he leads the company's strategic direction and product development."
+                        data-linkedin="https://www.linkedin.com/in/midhunkotagiri/">
+                        <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden shadow-lg team-avatar-ring">
+                            <img class="w-full h-full object-cover" src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1758718874/DSC_1016_dnqxtn.jpg" alt="Midhun Kotagiri">
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">Midhun Kotagiri</h3>
+                        <p class="text-violet-600 font-semibold">Founder & CEO</p>
+                    </div>
+                    <!-- Team Member Card: Charitha Sharma -->
+                    <div class="text-center cursor-pointer fade-in-up" style="transition-delay: 150ms;"
+                        data-name="Charitha Sharma"
+                        data-title="Co-Founder & Lead Manager"
+                        data-quote="We believe that a strong product is built on a deep understanding of the user. Our goal is to make a difference in the classroom, one user at a time."
+                        data-img="https://res.cloudinary.com/dpz44zf0z/image/upload/v1758728402/WhatsApp_Image_2025-09-24_at_21.08.35_8d5c7d72_gb2lxk.jpg"
+                        data-bio="Charitha brings a wealth of educational expertise to the team. As Co-Founder and Lead Manager, she bridges the gap between technology and pedagogy, ensuring our products are not only innovative but also effective and user-friendly for both students and instructors."
+                        data-linkedin="https://www.linkedin.com/in/adivi-charitha-54aa00265/">
+                        <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden shadow-lg team-avatar-ring">
+                            <img class="w-full h-full object-cover" src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1758728402/WhatsApp_Image_2025-09-24_at_21.08.35_8d5c7d72_gb2lxk.jpg" alt="Charitha Sharma">
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">Charitha Sharma</h3>
+                        <p class="text-violet-600 font-semibold">Co-Founder & Lead Manager</p>
+                    </div>
+                </div>
+                <div class="w-full mt-16 flex justify-center items-start gap-10 md:gap-16 flex-wrap">
+                   
+
+        <!-- Core Values Section -->
+        <section id="values" class="py-28 sm:py-36 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl fade-in-up">💡 Our Core Values</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600 fade-in-up" style="transition-delay: 150ms;">
+                        The principles that guide our innovation and build trust with our users.
+                    </p>
+                </div>
+                <div class="mt-20 grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Value Card 1: Integrity -->
+                    <div class="card-glow p-8 text-center fade-in-up">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-2xl bg-violet-100 text-violet-600 mx-auto">
+                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">Integrity</h3>
+                        <p class="mt-2 text-base text-gray-600">Building trust through transparent and secure platforms.</p>
+                    </div>
+                    <!-- Value Card 2: Innovation -->
+                    <div class="card-glow p-8 text-center fade-in-up" style="transition-delay: 100ms;">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-2xl bg-violet-100 text-violet-600 mx-auto">
+                           <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.311a7.5 7.5 0 01-7.5 0c-1.255 0-2.443.29-3.5.832m14.25-8.832a7.5 7.5 0 00-7.5 0c1.255 0 2.443.29 3.5.832m-14.25 8.832c-1.289-.543-2.396-1.342-3.3-2.345m12.45-13.352a6.017 6.017 0 01-1.5.189m1.5-.189a6.017 6.017 0 001.5-.189m-1.5 2.311a7.5 7.5 0 00-7.5 0c-1.255 0-2.443.29-3.5.832m14.25-8.832a7.5 7.5 0 00-7.5 0c.883 0 1.7.218 2.426.608M12 6.75v5.25m0 0a6.01 6.01 0 011.5.189m-1.5-.189a6.01 6.01 0 00-1.5.189" /></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">Innovation</h3>
+                        <p class="mt-2 text-base text-gray-600">Continuously pushing the boundaries of automation and AI in education.</p>
+                    </div>
+                    <!-- Value Card 3: Empowerment -->
+                    <div class="card-glow p-8 text-center fade-in-up" style="transition-delay: 200ms;">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-2xl bg-violet-100 text-violet-600 mx-auto">
+                            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0l-.07.004-.002.004-.002.003-.004.002-.003.002-.002.001-.004.001-.002.001-.001.001 0 0h.001" /></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">Empowerment</h3>
+                        <p class="mt-2 text-base text-gray-600">Enabling users, from students to organizations, to unlock their full potential.</p>
+                    </div>
+                     <!-- Value Card 4: Excellence -->
+                    <div class="card-glow p-8 text-center fade-in-up" style="transition-delay: 300ms;">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-2xl bg-violet-100 text-violet-600 mx-auto">
+                           <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">Excellence</h3>
+                        <p class="mt-2 text-base text-gray-600">Committed to high performance, reliability, and user-centric design.</p>
+                    </div>
+                     <!-- Value Card 5: Impact -->
+                    <div class="card-glow p-8 text-center fade-in-up" style="transition-delay: 400ms;">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-2xl bg-violet-100 text-violet-600 mx-auto">
+                           <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">Impact</h3>
+                        <p class="mt-2 text-base text-gray-600">Creating technology that drives measurable growth and learning outcomes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-28 sm:py-36">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl fade-in-up">Get in Touch</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600 fade-in-up" style="transition-delay: 150ms;">
+                        Have questions about our solutions? We'd love to hear from you.
+                    </p>
+                </div>
+                <div class="mt-16 max-w-lg mx-auto bg-white p-8 sm:p-10 rounded-3xl shadow-xl fade-in-up" style="transition-delay: 300ms;">
+                    <form id="contact-form" action="https://formspree.io/f/xgvnvdew" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-semibold text-gray-700">Full Name</label>
+                            <input type="text" name="name" id="name" required class="form-input-styled mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                        </div>
+                        <div>
+                            <label for="organization" class="block text-sm font-semibold text-gray-700">Organization</label>
+                            <input type="text" name="organization" id="organization" class="form-input-styled mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-gray-700">Email Address</label>
+                            <input type="email" name="email" id="email" required class="form-input-styled mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-semibold text-gray-700">Message</label>
+                            <textarea id="message" name="message" rows="4" required class="form-input-styled mt-1 block w-full rounded-md shadow-sm sm:text-sm p-3"></textarea>
+                        </div>
+                        <div id="form-status" class="text-center text-sm font-medium h-4"></div>
+                        <div>
+                            <button id="form-submit-btn" type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-full shadow-sm text-base font-semibold text-white bg-violet-600 hover:bg-violet-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-500">
+                                <span id="button-text">Send Message</span>
+                                <div id="spinner" class="spinner ml-3 hidden"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="bg-violet-700">
+             <div class="max-w-4xl mx-auto text-center py-20 px-4 sm:py-24 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                    <span class="block">Ready to Build Possibilities?</span>
+                </h2>
+                <p class="mt-4 text-lg leading-6 text-violet-200">Learn how Xeta Solutions can help transform your organization's learning and hiring processes. Let's create an impact together.</p>
+                <a href="#contact" class="mt-8 w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-violet-600 bg-white hover:bg-violet-50 sm:w-auto transform hover:scale-105 transition-transform duration-300">
+                    Contact Sales
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="fixed bottom-6 right-6 p-3 rounded-full bg-violet-600 text-white shadow-lg transition-all duration-300 opacity-0 invisible hover:bg-violet-700 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
+        </svg>
+    </button>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                 <a href="index.html" class="inline-flex items-center justify-center space-x-3">
+                    <img class="h-10 w-10 rounded-lg" src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760704788/XETA_SOLUTIONS_LOGO_bcsbwh.png" alt="Xeta Solutions Logo">
+                    <span class="text-2xl font-bold text-white">Xeta Solutions</span>
+                </a>
+                <p class="text-slate-400 text-base mt-4 max-w-md mx-auto">“At Xeta Solutions, we don’t just build platforms — we build possibilities.”</p>
+            </div>
+            <div class="mt-8 border-t border-slate-700 pt-8 text-center">
+                <p class="text-base text-slate-400">&copy; 2025 Xeta Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Team Member Modal -->
+    <div id="team-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-60 transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none">
+        <div id="team-modal-content" class="relative w-full max-w-2xl p-8 bg-white rounded-3xl shadow-2xl transition-all duration-300 transform scale-95 mx-4">
+            <button id="close-team-modal" class="absolute top-4 right-4 text-slate-600 hover:text-red-500 transition-transform duration-200 transform hover:rotate-90">
+                <span class="sr-only">Close modal</span>
+                <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="flex flex-col sm:flex-row gap-8 items-center sm:items-start">
+                <img id="modal-img" src="" alt="" class="w-32 h-32 rounded-full object-cover flex-shrink-0 border-4 border-violet-200">
+                <div class="text-center sm:text-left">
+                    <h3 id="modal-name" class="text-3xl font-bold text-slate-900"></h3>
+                    <div class="flex items-center justify-center sm:justify-start gap-2 mt-1">
+                        <p id="modal-title" class="text-violet-600 font-semibold text-lg"></p>
+                        <a id="modal-linkedin" href="#" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-blue-700 transition-colors duration-300 hidden">
+                            <span class="sr-only">LinkedIn Profile</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <p id="modal-quote" class="mt-2 text-md font-style: italic text-slate-500"></p>
+                    <p id="modal-bio" class="mt-4 text-slate-600 text-base"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Mobile Menu Logic ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuOpenIcon = document.getElementById('menu-open-icon');
+            const menuCloseIcon = document.getElementById('menu-close-icon');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            const toggleMenu = () => {
+                mobileMenu.classList.toggle('hidden');
+                menuOpenIcon.classList.toggle('block');
+                menuOpenIcon.classList.toggle('hidden');
+                menuCloseIcon.classList.toggle('hidden');
+                menuCloseIcon.classList.toggle('block');
+            };
+
+            mobileMenuButton.addEventListener('click', toggleMenu);
+            mobileNavLinks.forEach(link => link.addEventListener('click', () => {
+                if (!mobileMenu.classList.contains('hidden')) {
+                    toggleMenu();
+                }
+            }));
+
+            // --- Sticky Navbar Logic ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('shadow-lg');
+                    navbar.classList.remove('shadow-sm');
+                } else {
+                    navbar.classList.add('shadow-sm');
+                    navbar.classList.remove('shadow-lg');
+                }
+            });
+
+            // --- Animate elements on scroll ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+
+            // --- Scroll to Top Button Logic ---
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            const scrollThreshold = 300; // Show button after 300px scroll
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > scrollThreshold) {
+                    scrollToTopBtn.classList.remove('invisible', 'opacity-0');
+                    scrollToTopBtn.classList.add('visible', 'opacity-100');
+                } else {
+                    scrollToTopBtn.classList.remove('visible', 'opacity-100');
+                    scrollToTopBtn.classList.add('invisible', 'opacity-0');
+                }
+            });
+
+            scrollToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // --- Contact Form Submission Logic ---
+            const contactForm = document.getElementById('contact-form');
+            const formStatus = document.getElementById('form-status');
+            const formSubmitBtn = document.getElementById('form-submit-btn');
+            const buttonText = document.getElementById('button-text');
+            const spinner = document.getElementById('spinner');
+
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Show loading state
+                buttonText.textContent = "Sending...";
+                spinner.classList.remove('hidden');
+                formSubmitBtn.disabled = true;
+
+                const formData = new FormData(contactForm);
+
+                try {
+                    const response = await fetch(e.target.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        formStatus.textContent = "Message sent successfully! We'll be in touch.";
+                        formStatus.className = "text-center text-sm font-medium h-4 text-green-600";
+                        contactForm.reset();
+                    } else {
+                        const data = await response.json();
+                        if (Object.hasOwn(data, 'errors')) {
+                            formStatus.textContent = data.errors.map(error => error.message).join(", ");
+                        } else {
+                            formStatus.textContent = "Oops! There was a problem submitting your form.";
+                        }
+                        formStatus.className = "text-center text-sm font-medium h-4 text-red-600";
+                    }
+                } catch (error) {
+                    formStatus.textContent = "Oops! Network error. Please try again.";
+                    formStatus.className = "text-center text-sm font-medium h-4 text-red-600";
+                } finally {
+                    // Reset button state
+                    buttonText.textContent = "Send Message";
+                    spinner.classList.add('hidden');
+                    formSubmitBtn.disabled = false;
+                }
+            });
+
+            // --- Team Member Modal Logic ---
+            const teamCards = document.querySelectorAll('[data-name]');
+            const teamModal = document.getElementById('team-modal');
+            const teamModalContent = document.getElementById('team-modal-content');
+            const closeTeamModalButton = document.getElementById('close-team-modal');
+            const modalName = document.getElementById('modal-name');
+            const modalTitle = document.getElementById('modal-title');
+            const modalImg = document.getElementById('modal-img');
+            const modalBio = document.getElementById('modal-bio');
+            const modalQuote = document.getElementById('modal-quote');
+            const modalLinkedin = document.getElementById('modal-linkedin');
+
+            const showTeamModal = (card) => {
+                modalName.textContent = card.dataset.name;
+                modalTitle.textContent = card.dataset.title;
+                modalImg.src = card.dataset.img;
+                modalImg.alt = card.dataset.name;
+                modalBio.textContent = card.dataset.bio;
+                modalQuote.textContent = `"${card.dataset.quote}"`;
+
+                const linkedinUrl = card.dataset.linkedin;
+                if (linkedinUrl && linkedinUrl !== 'undefined') {
+                    modalLinkedin.href = linkedinUrl;
+                    modalLinkedin.classList.remove('hidden');
+                } else {
+                    modalLinkedin.classList.add('hidden');
+                }
+
+                teamModal.classList.remove('opacity-0', 'pointer-events-none');
+                teamModal.classList.add('open');
+                teamModalContent.classList.remove('scale-95');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const hideTeamModal = () => {
+                teamModal.classList.add('opacity-0');
+                teamModal.classList.remove('open');
+                teamModalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    teamModal.classList.add('pointer-events-none');
+                    document.body.style.overflow = '';
+                }, 300);
+            };
+
+            teamCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showTeamModal(card);
+                });
+            });
+
+            closeTeamModalButton.addEventListener('click', hideTeamModal);
+            teamModal.addEventListener('click', (e) => {
+                if (e.target === teamModal) {
+                    hideTeamModal();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard - Xeta Solutions</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header img { width: 150px; }
+        .header button { padding: 10px 20px; border-radius: 8px; border: none; background-color: #dc3545; color: white; cursor: pointer; font-weight: bold; }
+        .container { max-width: 900px; margin: auto; }
+        .card { background-color: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        h2, h3 { color: #1c1e21; }
+        .task-list table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .task-list th, .task-list td { padding: 12px; border-bottom: 1px solid #e0e0e0; text-align: left; }
+        .task-list th { background-color: #f8f9fa; }
+        .status-completed { color: green; font-weight: bold; }
+        .status-inprogress { color: orange; font-weight: bold; }
+        .status-pending { color: grey; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760704788/XETA_SOLUTIONS_bt6bgn.jpg" alt="Xeta Solutions Full Logo">
+            <button onclick="logout()">Logout</button>
+        </div>
+        <div class="card">
+            <h2 id="welcomeMessage">Welcome, Client!</h2>
+        </div>
+        <div class="card task-list">
+            <h3>Project Task Progress</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="clientTaskTable">
+                    <!-- Client tasks loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const API_URL = 'http://localhost:3000';
+        const user = JSON.parse(localStorage.getItem('xetaUser'));
+        const token = localStorage.getItem('xetaToken');
+
+        window.onload = function() {
+            if (!user || !token || user.role !== 'client') {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('welcomeMessage').textContent = `Welcome, ${user.name}!`;
+            loadClientTasks();
+        };
+
+        function logout() {
+            localStorage.removeItem('xetaUser');
+            localStorage.removeItem('xetaToken');
+            window.location.href = 'login.html';
+        }
+
+        async function loadClientTasks() {
+            if(!user.assignedLead) {
+                document.getElementById('clientTaskTable').innerHTML = '<tr><td colspan="3">No project lead assigned yet.</td></tr>';
+                return;
+            }
+
+            const response = await fetch(`${API_URL}/employee/tasks/${user.assignedLead}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const tasks = await response.json();
+            const tableBody = document.getElementById('clientTaskTable');
+            tableBody.innerHTML = '';
+
+            if (tasks.length === 0) {
+                 tableBody.innerHTML = '<tr><td colspan="3">No tasks updated for your project yet.</td></tr>';
+                return;
+            }
+
+            tasks.forEach(task => {
+                let statusClass = `status-${task.status.toLowerCase().replace(/\s+/g, '')}`;
+                let row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${task.title}</td>
+                    <td>${task.description}</td>
+                    <td><span class="${statusClass}">${task.status}</span></td>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>

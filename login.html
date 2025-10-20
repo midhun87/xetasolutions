@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Xeta Solutions</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .logo {
+            width: 120px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            color: #1c1e21;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #606770;
+            font-weight: 600;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd0d5;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        }
+        #message {
+            margin-top: 15px;
+            color: #dc3545;
+            font-weight: 500;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <img src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760704788/XETA_SOLUTIONS_LOGO_bcsbwh.png" alt="Xeta Solutions Logo" class="logo">
+        <h2>Portal Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="userId">User ID</label>
+                <input type="text" id="userId" name="userId" required placeholder="e.g., admin or emp-1234">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const userId = document.getElementById('userId').value.trim();
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = ''; // Clear previous messages
+
+            if (!userId || !password) {
+                messageEl.textContent = 'Please enter both User ID and Password.';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Store user info and token to keep the session alive
+                    localStorage.setItem('xetaUser', JSON.stringify(data.user));
+                    localStorage.setItem('xetaToken', data.token);
+
+                    // Redirect based on role
+                    switch (data.user.role) {
+                        case 'management':
+                            window.location.href = 'management.html';
+                            break;
+                        case 'employee':
+                            window.location.href = 'emp-dashboard.html';
+                            break;
+                        case 'client':
+                            window.location.href = 'client-dashboard.html';
+                            break;
+                        default:
+                            messageEl.textContent = 'Unknown user role.';
+                    }
+                } else {
+                    messageEl.textContent = data.message || 'Login failed. Please check your credentials.';
+                }
+            } catch (error) {
+                console.error('Login Error:', error);
+                messageEl.textContent = 'An error occurred. Please try again later.';
+            }
+        });
+    </script>
+</body>
+</html>

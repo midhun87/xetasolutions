@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Management Dashboard - Xeta Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .modal-enter { animation: modal-enter 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .modal-leave { animation: modal-leave 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        @keyframes modal-enter {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes modal-leave {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+        @keyframes toast-in { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-in { animation: toast-in 0.4s ease-out forwards; }
+        .status-completed { color: #16a34a; background-color: #f0fdf4; border: 1px solid #bbf7d0; }
+        .status-inprogress { color: #d97706; background-color: #fffbeb; border: 1px solid #fde68a; }
+        .status-pending { color: #475569; background-color: #f1f5f9; border: 1px solid #e2e8f0; }
+        .input { @apply mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition; }
+        .file-input { @apply mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100; }
+        .btn { @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200; }
+        .btn-primary { @apply text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 disabled:opacity-50; }
+        .btn-secondary { @apply text-slate-700 bg-slate-100 hover:bg-slate-200 focus:ring-slate-500; }
+        .table-action-btn { @apply p-2 rounded-md text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans antialiased">
+    <div class="flex h-screen bg-slate-100">
+        <!-- Sidebar -->
+        <aside class="w-64 flex-shrink-0 bg-slate-800 text-slate-300 flex flex-col">
+            <div class="h-20 flex items-center justify-center px-6 border-b border-slate-700">
+                <img src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760704788/XETA_SOLUTIONS_bt6bgn.jpg" onerror="this.onerror=null;this.src='https://placehold.co/150x40/1e293b/ffffff?text=Xeta&font=sans';" alt="Xeta Solutions Logo" class="h-10 w-auto" />
+            </div>
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <button onclick="openModal('employeeModal')" class="w-full flex items-center px-4 py-3 text-left text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+                    Add Employee
+                </button>
+                 <button onclick="openModal('taskModal')" class="w-full flex items-center px-4 py-3 text-left text-sm font-medium rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    Assign Task
+                </button>
+            </nav>
+            <div class="px-4 py-4 border-t border-slate-700">
+                 <button onclick="logout()" class="w-full flex items-center px-4 py-3 text-left text-sm font-medium rounded-lg text-red-400 hover:bg-red-500/20 hover:text-red-300 transition-colors">
+                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white/80 backdrop-blur-lg shadow-sm">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-20">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-800">Welcome, Manager!</h1>
+                            <p id="currentDate" class="text-sm text-slate-500">Loading date...</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-100">
+                <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-md flex items-center space-x-4 transition hover:shadow-lg hover:-translate-y-1">
+                            <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                                <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500">Total Employees</p>
+                                <p id="totalEmployees" class="text-2xl font-bold text-slate-800">0</p>
+                            </div>
+                        </div>
+                        <!-- Add other stat cards here if needed -->
+                    </div>
+
+                    <!-- Main Content Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+                        <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-xl font-semibold text-slate-800 mb-6">Employee Roster</h3>
+                            <div class="max-h-[30rem] overflow-y-auto">
+                                <table class="min-w-full divide-y divide-slate-200">
+                                    <thead class="bg-slate-50 sticky top-0">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Name</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Designation</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="employeeTable" class="bg-white divide-y divide-slate-200"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Employee Tracker Card -->
+                        <div id="tracking-section" class="lg:col-span-2 space-y-8" style="display: none;">
+                             <div class="bg-white p-6 rounded-xl shadow-md">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 id="tracking-header" class="text-xl font-semibold text-slate-800 flex items-center"></h3>
+                                    <button onclick="closeTracker()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+                                </div>
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-md font-medium text-slate-600 mb-2">Task Progress</h4>
+                                        <div class="max-h-48 overflow-y-auto border border-slate-200 rounded-lg" id="trackingTasksContainer">
+                                            <table class="min-w-full divide-y divide-slate-200"><tbody id="trackingTasksTable"></tbody></table>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-md font-medium text-slate-600 mb-2">Attendance History</h4>
+                                        <div class="max-h-48 overflow-y-auto border border-slate-200 rounded-lg" id="trackingAttendanceContainer">
+                                            <table class="min-w-full divide-y divide-slate-200"><thead class="bg-slate-50"><tr><th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Date</th><th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">In</th><th class="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase">Out</th></tr></thead><tbody id="trackingAttendanceTable"></tbody></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Create Employee Modal -->
+    <div id="employeeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg modal-enter">
+            <div class="flex justify-between items-center p-5 border-b">
+                <h3 class="text-xl font-semibold text-slate-800">Create New Employee</h3>
+                <button onclick="closeModal('employeeModal')" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="createEmployeeForm" class="p-6 space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-slate-600 mb-1">Name</label>
+                    <input type="text" id="name" name="name" placeholder="e.g., John Doe" required class="input" />
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-600 mb-1">Email</label>
+                    <input type="email" id="email" name="email" placeholder="e.g., john.doe@example.com" required class="input" />
+                </div>
+                <div>
+                    <label for="mobile" class="block text-sm font-medium text-slate-600 mb-1">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" placeholder="e.g., +1 234 567 890" required class="input" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="bloodGroup" class="block text-sm font-medium text-slate-600 mb-1">Blood Group</label>
+                        <input type="text" id="bloodGroup" name="bloodGroup" placeholder="e.g., A+" class="input" />
+                    </div>
+                    <div>
+                        <label for="doj" class="block text-sm font-medium text-slate-600 mb-1">Joining Date</label>
+                        <input type="text" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" id="doj" name="doj" placeholder="Select date" required class="input" />
+                    </div>
+                </div>
+                <div>
+                    <label for="designation" class="block text-sm font-medium text-slate-600 mb-1">Designation</label>
+                    <input type="text" id="designation" name="designation" placeholder="e.g., Software Developer" required class="input" />
+                </div>
+                <div>
+                    <label for="shift" class="block text-sm font-medium text-slate-600 mb-1">Shift Timings</label>
+                    <input type="text" id="shift" name="shift" placeholder="e.g., 9:00 AM - 6:00 PM" class="input" />
+                </div>
+                 <div>
+                    <label for="password" class="block text-sm font-medium text-slate-600 mb-1">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter a secure password" required class="input" />
+                </div>
+                <div>
+                    <label for="profilePic" class="block text-sm font-medium text-slate-600 mb-1">Profile Picture</label>
+                    <input type="file" id="profilePic" name="profilePic" class="file-input"/>
+                </div>
+                <div class="pt-4">
+                    <button type="submit" id="createEmployeeBtn" class="btn btn-primary w-full">
+                        <span id="btn-text">Create Employee</span>
+                        <svg id="btn-spinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Assign Task Modal -->
+    <div id="taskModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg modal-enter">
+             <div class="flex justify-between items-center p-5 border-b">
+                <h3 class="text-xl font-semibold text-slate-800">Assign New Task</h3>
+                <button onclick="closeModal('taskModal')" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+            </div>
+            <form id="taskForm" class="p-6 space-y-4">
+                <div><label class="block text-sm font-medium text-slate-700 mb-1">Assign To</label><select id="taskEmployeeSelect" required class="input"></select></div>
+                <div><label class="block text-sm font-medium text-slate-700 mb-1">Title</label><input id="taskTitle" placeholder="e.g., Complete Q3 Report" required class="input"></div>
+                <div><label class="block text-sm font-medium text-slate-700 mb-1">Description</label><textarea id="taskDescription" placeholder="Provide task details..." rows="4" required class="input"></textarea></div>
+                <div class="pt-4">
+                    <button type="submit" class="btn btn-primary w-full">Assign Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[100] space-y-3 w-80"></div>
+    
+    <script>
+        const API_URL = "http://localhost:3000";
+        const token = localStorage.getItem("xetaToken");
+
+        window.onload = function() {
+            if (!token) { window.location.href = "login.html"; return; }
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            fetchEmployees();
+            document.getElementById("createEmployeeForm").addEventListener("submit", createEmployee);
+            document.getElementById("taskForm").addEventListener("submit", assignTask);
+        };
+        
+        function openModal(modalId) { document.getElementById(modalId).classList.remove('hidden'); }
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const form = modal.querySelector('form');
+            if (form) form.reset();
+            const modalContent = modal.querySelector('.modal-enter');
+            modalContent.classList.remove('modal-enter');
+            modalContent.classList.add('modal-leave');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modalContent.classList.remove('modal-leave');
+                modalContent.classList.add('modal-enter');
+            }, 300);
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+        
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColor = isError ? 'bg-red-500' : 'bg-green-500';
+            const icon = isError ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>` : `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+            toast.className = `w-full ${bgColor} text-white text-sm font-medium p-4 rounded-lg shadow-2xl flex items-center space-x-3 toast-in`;
+            toast.innerHTML = `<span>${icon}</span><p class="flex-1">${message}</p>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.4s ease-in';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        async function createEmployee(e) {
+            e.preventDefault();
+            const createBtn = document.getElementById('createEmployeeBtn');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+            
+            createBtn.disabled = true;
+            btnText.classList.add('hidden');
+            btnSpinner.classList.remove('hidden');
+
+            const formData = new FormData(e.target);
+            try {
+                const res = await fetch(`${API_URL}/management/create-employee`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    showToast('Employee created successfully!');
+                    closeModal('employeeModal');
+                    fetchEmployees();
+                } else {
+                    throw new Error(result.message || 'Failed to create employee');
+                }
+            } catch (error) {
+                showToast(error.message, true);
+            } finally {
+                createBtn.disabled = false;
+                btnText.classList.remove('hidden');
+                btnSpinner.classList.add('hidden');
+            }
+        }
+
+        async function assignTask(e) {
+            e.preventDefault();
+            const taskData = {
+                assignedTo: document.getElementById('taskEmployeeSelect').value,
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDescription').value
+            };
+            if (!taskData.assignedTo) {
+                showToast('Please select an employee.', true);
+                return;
+            }
+            try {
+                const res = await fetch(`${API_URL}/management/assign-task`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(taskData)
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    showToast('Task assigned successfully!');
+                    closeModal('taskModal');
+                } else {
+                    throw new Error(result.message || 'Failed to assign task');
+                }
+            } catch (error) {
+                showToast(error.message, true);
+            }
+        }
+
+        async function fetchEmployees() {
+            try {
+                const res = await fetch(`${API_URL}/management/employees`, { headers: { Authorization: `Bearer ${token}` } });
+                if (!res.ok) throw new Error('Failed to fetch employees');
+                const employees = await res.json();
+                document.getElementById('totalEmployees').textContent = employees.length;
+                const tableBody = document.getElementById("employeeTable");
+                const select = document.getElementById("taskEmployeeSelect");
+                tableBody.innerHTML = "";
+                select.innerHTML = '<option value="">Select Employee</option>';
+
+                if (employees.length === 0) {
+                     tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-10 text-slate-500">No employees found. Add one to get started!</td></tr>';
+                }
+
+                employees.forEach((emp) => {
+                    const row = tableBody.insertRow();
+                    row.className = "hover:bg-slate-50 transition-colors";
+                    const profilePicUrl = emp.profilePic || `https://placehold.co/40x40/e0e7ff/4f46e5?text=${emp.name.charAt(0)}&font=sans`;
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    <img class="h-10 w-10 rounded-full object-cover" src="${profilePicUrl}" alt="${emp.name}">
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-slate-900">${emp.name}</div>
+                                    <div class="text-sm text-slate-500">${emp.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">${emp.designation}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-600">${emp.userId}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                            <div class="flex items-center justify-center space-x-2">
+                                <button onclick='viewIdCard(${JSON.stringify(emp)})' class="table-action-btn" title="View ID Card">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M12 15H6"/><path d="M18 12h-6"/></svg>
+                                </button>
+                                <button onclick='trackEmployee(${JSON.stringify(emp)})' class="table-action-btn" title="Track Employee">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 2v6h6M2.6 15.57a10 10 0 1 0 .64-7.07"/><path d="M12 18v-6h6"/></svg>
+                                </button>
+                            </div>
+                        </td>`;
+                    const opt = document.createElement("option");
+                    opt.value = emp.userId;
+                    opt.textContent = `${emp.name} (${emp.userId})`;
+                    select.appendChild(opt);
+                });
+            } catch (error) {
+                showToast(error.message, true);
+            }
+        }
+
+        function viewIdCard(emp) {
+            const empDataString = encodeURIComponent(JSON.stringify(emp));
+            window.open(`id-card.html?data=${empDataString}`, '_blank', 'width=400,height=650');
+        }
+
+        function trackEmployee(employee) {
+            const trackingSection = document.getElementById('tracking-section');
+            document.getElementById('tracking-header').innerHTML = `<span class="font-medium text-slate-600">Tracking:</span> <span class="ml-2 font-bold text-slate-800">${employee.name}</span>`;
+            trackingSection.style.display = 'block';
+            trackingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            fetchAndDisplayTasks(employee.userId);
+            fetchAndDisplayAttendance(employee.userId);
+        }
+
+        function closeTracker() {
+            document.getElementById('tracking-section').style.display = 'none';
+        }
+        
+        const createTableLoader = (cols, container) => {
+            const loaderRow = `<tr><td colspan="${cols}" class="p-4 text-center text-slate-500">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="animate-spin h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span>Loading...</span>
+                </div>
+            </td></tr>`;
+            document.getElementById(container).innerHTML = loaderRow;
+        }
+
+        async function fetchAndDisplayTasks(userId) {
+            const tableBody = document.getElementById('trackingTasksTable');
+            createTableLoader(2, 'trackingTasksTable');
+            try {
+                const res = await fetch(`${API_URL}/management/employee-tasks/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
+                if (!res.ok) throw new Error('Could not fetch tasks.');
+                const tasks = await res.json();
+                tableBody.innerHTML = '';
+                if (tasks.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-slate-500">No tasks assigned.</td></tr>';
+                    return;
+                }
+                tasks.forEach(task => {
+                    const statusClass = `status-${task.status.toLowerCase().replace(/\s+/g, '')}`;
+                    tableBody.insertRow().innerHTML = `
+                        <td class="px-4 py-3 text-sm text-slate-700 font-medium">${task.title}</td>
+                        <td class="px-4 py-3 text-sm text-right"><span class="px-2.5 py-1 text-xs font-semibold rounded-full ${statusClass}">${task.status}</span></td>`;
+                });
+            } catch (error) {
+                tableBody.innerHTML = `<tr><td colspan="2" class="p-4 text-center text-red-500">${error.message}</td></tr>`;
+            }
+        }
+
+        async function fetchAndDisplayAttendance(userId) {
+            const tableBody = document.getElementById('trackingAttendanceTable');
+            createTableLoader(3, 'trackingAttendanceTable');
+            try {
+                const res = await fetch(`${API_URL}/management/employee-attendance/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
+                if (!res.ok) throw new Error('Could not fetch attendance.');
+                const records = await res.json();
+                tableBody.innerHTML = '';
+                if (records.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-slate-500">No attendance records.</td></tr>';
+                    return;
+                }
+                records.forEach(rec => {
+                    const checkIn = rec.checkInTime ? new Date(rec.checkInTime).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', hour12: true }) : '—';
+                    const checkOut = rec.checkOutTime ? new Date(rec.checkOutTime).toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit', hour12: true }) : '—';
+                    tableBody.insertRow().innerHTML = `
+                        <td class="px-4 py-3 text-sm text-slate-700">${new Date(rec.date).toLocaleDateString()}</td>
+                        <td class="px-4 py-3 text-sm text-slate-500">${checkIn}</td>
+                        <td class="px-4 py-3 text-sm text-slate-500">${checkOut}</td>`;
+                });
+            } catch (error) {
+                tableBody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-red-500">${error.message}</td></tr>`;
+            }
+        }
+    </script>
+</body>
+</html>
+

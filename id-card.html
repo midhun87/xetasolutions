@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee ID Card - Xeta Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+        #idCardWrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        #idCardWrapper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 70%;
+            height: 70%;
+            background-image: url('https://res.cloudinary.com/dpz44zf0z/image/upload/v1760704788/XETA_SOLUTIONS_LOGO_bcsbwh.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.05;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        #idCardContent {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body class="bg-slate-200 font-sans antialiased flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-xs mx-auto">
+        <div id="idCardWrapper" class="bg-white rounded-2xl shadow-2xl">
+            <div id="idCardContent">
+                <!-- ID Card content will be injected here by script -->
+            </div>
+        </div>
+        <div id="downloadContainer" class="mt-6">
+            <!-- Download button will be injected here by script -->
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const empData = urlParams.get('data');
+
+            if (!empData) {
+                document.body.innerHTML = '<p class="text-red-500 font-bold text-center">Employee data not found.</p>';
+                return;
+            }
+
+            try {
+                const emp = JSON.parse(decodeURIComponent(empData));
+                renderIdCard(emp);
+            } catch (e) {
+                console.error("Failed to parse employee data", e);
+                document.body.innerHTML = '<p class="text-red-500 font-bold text-center">Invalid employee data.</p>';
+            }
+        };
+
+        function renderIdCard(emp) {
+            const cardContent = document.getElementById("idCardContent");
+            const downloadContainer = document.getElementById("downloadContainer");
+            const formattedDoj = new Date(emp.doj).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            cardContent.innerHTML = `
+                <div class="bg-transparent relative">
+                    <!-- Decorative Top Border -->
+                    <div class="h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+
+                    <!-- Main Content -->
+                    <div class="p-5">
+                        <!-- Employee Image -->
+                        <div class="flex justify-center mb-3 pt-3">
+                            <img src="${emp.profilePicUrl || "https://placehold.co/128x128/e2e8f0/475569?text=PIC"}" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-slate-100 shadow-lg object-cover">
+                        </div>
+
+                        <!-- Employee Name & Designation -->
+                        <div class="text-center">
+                            <h4 class="text-lg font-bold text-slate-800 break-words">${emp.name}</h4>
+                            <p class="text-sm text-indigo-600 font-semibold">${emp.designation}</p>
+                        </div>
+                        
+                        <hr class="my-3 border-slate-200">
+
+                        <!-- Employee Details -->
+                        <div class="text-xs text-left text-slate-700 space-y-2">
+                            <div class="flex items-start">
+                                <span class="font-medium text-slate-500 w-20 flex-shrink-0">Employee ID</span>
+                                <span class="font-semibold text-slate-800">${emp.userId}</span>
+                            </div>
+                             <div class="flex items-start">
+                                <span class="font-medium text-slate-500 w-20 flex-shrink-0">Email</span>
+                                <span class="font-semibold text-slate-800 break-all">${emp.email}</span>
+                            </div>
+                             <div class="flex items-start">
+                                <span class="font-medium text-slate-500 w-20 flex-shrink-0">Mobile</span>
+                                <span class="font-semibold text-slate-800">${emp.mobile}</span>
+                            </div>
+                             <div class="flex items-start">
+                                <span class="font-medium text-slate-500 w-20 flex-shrink-0">Date of Joining</span>
+                                <span class="font-semibold text-slate-800">${formattedDoj}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer with Logo and Barcode -->
+                    <div class="bg-slate-50/70 p-3 flex flex-col items-center text-center backdrop-blur-sm">
+                        <div class="mb-2">
+                            <img src="https://res.cloudinary.com/dpz44zf0z/image/upload/v1760704788/XETA_SOLUTIONS_LOGO_bcsbwh.png" alt="Company Logo" class="h-6 w-auto mx-auto"/>
+                            <h2 class="text-base font-bold text-slate-800 tracking-wide mt-2">Xeta Solutions</h2>
+                            <p class="text-xs text-slate-500 mt-0.5">www.xetasolutions.net</p>
+                        </div>
+                        <svg id="barcode"></svg>
+                    </div>
+                </div>
+            `;
+
+            downloadContainer.innerHTML = `
+                <button onclick='downloadIdCard()' class="no-print inline-flex items-center justify-center gap-2 w-full px-4 py-3 border border-transparent text-base font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download ID Card
+                </button>
+            `;
+
+            try {
+                JsBarcode("#barcode", emp.userId, {
+                    format: "CODE128",
+                    lineColor: "#334155",
+                    width: 1.5,
+                    height: 30,
+                    displayValue: false
+                });
+            } catch (e) {
+                console.error("Barcode generation failed", e);
+                const barcodeEl = document.getElementById('barcode');
+                if (barcodeEl) barcodeEl.style.display = 'none';
+            }
+        }
+
+        async function downloadIdCard() {
+            const cardElement = document.getElementById('idCardWrapper');
+            const urlParams = new URLSearchParams(window.location.search);
+            const empData = urlParams.get('data');
+            const emp = JSON.parse(decodeURIComponent(empData));
+            
+            if (!cardElement || !emp) {
+                alert('Could not find ID card content to download.');
+                return;
+            }
+
+            try {
+                const canvas = await html2canvas(cardElement, {
+                    scale: 3,
+                    useCORS: true,
+                    backgroundColor: null,
+                    logging: false
+                });
+                const link = document.createElement('a');
+                link.download = `ID-Card-${emp.name.replace(/\s+/g, '_')}-${emp.userId}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            } catch (err) {
+                console.error("Oops, something went wrong!", err);
+                alert('Failed to download ID card.');
+            }
+        }
+    </script>
+</body>
+</html>
+
