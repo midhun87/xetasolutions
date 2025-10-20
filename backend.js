@@ -26,7 +26,35 @@ async function startServer() {
     app.use(express.static(__dirname));
 
     // --- CLOUDINARY CONFIGURATION ---
-    
+    cloudinary.config({
+      cloud_name: 'dpz44zf0z',
+      api_key: '939929349547989',
+      api_secret: '7mwxyaqe-tvtilgyek2oR7lTkr8'
+    });
+
+
+    // --- MULTER SETUP ---
+    const storage = multer.memoryStorage();
+    const upload = multer({ storage: storage });
+
+    // IMPORTANT: Replace with your actual credentials and settings
+    const AWS_CONFIG = {
+        region: 'ap-south-1',
+        accessKeyId: 'AKIAT4YSUMZD755UHGW7',
+        secretAccessKey: '+7xyGRP/P+5qZD955qgrC8GwvuOsA33wwzwe6abl'
+    };
+    const JWT_SECRET = 'YOUR_SUPER_SECRET_KEY_REPLACE_ME';
+    const NODEMAILER_CONFIG = {
+        service: 'gmail',
+        auth: {
+            user: 'YOUR_EMAIL@gmail.com',
+            pass: 'YOUR_EMAIL_APP_PASSWORD'
+        }
+    };
+
+    AWS.config.update(AWS_CONFIG);
+    const dynamoDb = new AWS.DynamoDB.DocumentClient();
+    const transporter = nodemailer.createTransport(NODEMAILER_CONFIG);
 
     // Table Names
     const USERS_TABLE = 'xeta_users';
@@ -325,4 +353,5 @@ async function startServer() {
 }
 
 startServer();
+
 
