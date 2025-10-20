@@ -233,7 +233,7 @@
     <div id="toast-container" class="fixed bottom-5 right-5 z-[100] space-y-3 w-80"></div>
     
     <script>
-        const API_URL = ""; // Use relative path for deployed app
+        const API_URL = window.location.origin; // Dynamically set the API URL
         const token = localStorage.getItem("xetaToken");
 
         window.onload = function() {
