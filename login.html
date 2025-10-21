@@ -208,8 +208,8 @@
                     localStorage.setItem('xetaToken', data.token);
                     switch (data.user.role) {
                         case 'management': window.location.href = 'management.html'; break;
-                        case 'employee': window.location.href = 'emp-dashboard.html'; break;
-                        case 'client': window.location.href = 'client-dashboard.html'; break;
+                        case 'employee': window.location.href = 'employee.html'; break;
+                        case 'client': window.location.href = 'client.html'; break;
                         default: messageEl.textContent = 'Unknown user role.';
                     }
                 } else {
@@ -309,4 +309,5 @@
     </script>
 </body>
 </html>
+
 
