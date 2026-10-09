@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geeky Researcher | Premium Plant Pathology Platform</title>
+    
+    <!-- Fonts: Playfair Display (Serif) & Inter (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            forest: '#123D2B',
+                            botanical: '#237A4B',
+                            leaf: '#75B85A',
+                            ivory: '#F8F7F0',
+                            charcoal: '#202820',
+                            sage: '#E6EFE5',
+                            gold: '#C5A35A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    boxShadow: {
+                        'premium': '0 4px 20px -2px rgba(18, 61, 43, 0.08)',
+                        'premium-hover': '0 10px 30px -4px rgba(18, 61, 43, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F8F7F0; /* Warm ivory */
+            color: #202820; /* Dark charcoal */
+            overflow-x: hidden;
+        }
+
+        /* WebGL Canvas Positioning */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* Let clicks pass through to UI */
+        }
+        
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Subtle Background Pattern */
+        .bg-pattern {
+            background-image: radial-gradient(rgba(35, 122, 75, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* Hero Ambient Glows */
+        .hero-glow-1 {
+            background: radial-gradient(circle, rgba(197,163,90,0.15) 0%, rgba(248,247,240,0) 70%);
+        }
+        .hero-glow-2 {
+            background: radial-gradient(circle, rgba(117,184,90,0.1) 0%, rgba(248,247,240,0) 70%);
+        }
+
+        /* Navigation Transitions */
+        .nav-scrolled {
+            background-color: rgba(248, 247, 240, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px -2px rgba(18, 61, 43, 0.05);
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F8F7F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #237A4B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #123D2B;
+        }
+
+        /* Glassmorphism for specific cards (restrained) */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Hide elements initially for GSAP reveal */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+    </style>
+
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Three.js for 3D Hero -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="font-sans antialiased text-brand-charcoal selection:bg-brand-botanical selection:text-white">
+
+    <header id="main-nav" class="fixed w-full top-0 z-50 transition-all duration-300 py-6 px-4 md:px-8 bg-transparent">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            
+            <!-- Logo & Brand -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-brand-forest flex items-center justify-center text-brand-ivory relative overflow-hidden transition-transform duration-500 group-hover:scale-105">
+                    <i class="ph ph-leaf text-2xl absolute z-10"></i>
+                    <!-- Subtle background pulse -->
+                    <div class="absolute inset-0 bg-brand-botanical opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full scale-110"></div>
+                </div>
+                <div>
+                    <h1 class="font-serif font-bold text-xl leading-tight text-brand-forest">Geeky Researcher</h1>
+                    <p class="text-[10px] tracking-widest uppercase text-brand-botanical font-semibold">Plant Pathology Platform</p>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="#home" class="text-sm font-medium hover:text-brand-botanical transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-botanical after:transition-all hover:after:w-full">Home</a>
+                <a href="#about" class="text-sm font-medium hover:text-brand-botanical transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-botanical after:transition-all hover:after:w-full">About</a>
+                <a href="#levels" class="text-sm font-medium hover:text-brand-botanical transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-botanical after:transition-all hover:after:w-full">Levels</a>
+                <a href="#syllabus" class="text-sm font-medium hover:text-brand-botanical transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-botanical after:transition-all hover:after:w-full">Syllabus</a>
+                <a href="#resources" class="text-sm font-medium hover:text-brand-botanical transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-botanical after:transition-all hover:after:w-full">Resources</a>
+                <a href="#achievements" class="text-sm font-medium hover:text-brand-botanical transition-colors relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-brand-botanical after:transition-all hover:after:w-full">Achievements</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="#" class="text-sm font-medium text-brand-forest hover:text-brand-botanical transition-colors px-4 py-2">Login</a>
+                <a href="#enroll" class="text-sm font-semibold bg-brand-forest text-brand-ivory px-6 py-2.5 rounded-full hover:bg-brand-botanical hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">Enroll Now</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-brand-forest p-2 relative z-[60] transition-colors duration-300" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="ph ph-list text-3xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-brand-forest z-50 flex-col items-center justify-center gap-8 pt-24 pb-10 px-6 transition-transform duration-500 translate-x-full lg:hidden flex overflow-y-auto">
+            <nav class="flex flex-col items-center gap-6 w-full max-w-sm z-10">
+                <a href="#home" class="mobile-link text-2xl font-serif text-brand-ivory hover:text-brand-gold transition-colors">Home</a>
+                <a href="#about" class="mobile-link text-2xl font-serif text-brand-ivory hover:text-brand-gold transition-colors">About</a>
+                <a href="#levels" class="mobile-link text-2xl font-serif text-brand-ivory hover:text-brand-gold transition-colors">Levels</a>
+                <a href="#syllabus" class="mobile-link text-2xl font-serif text-brand-ivory hover:text-brand-gold transition-colors">Syllabus</a>
+                <a href="#resources" class="mobile-link text-2xl font-serif text-brand-ivory hover:text-brand-gold transition-colors">Resources</a>
+                <a href="#achievements" class="mobile-link text-2xl font-serif text-brand-ivory hover:text-brand-gold transition-colors">Achievements</a>
+                
+                <div class="w-16 h-px bg-brand-sage/20 my-2"></div>
+                
+                <a href="#" class="mobile-link text-lg text-brand-sage hover:text-white transition-colors">Login</a>
+                <a href="#enroll" class="mobile-link w-full text-center bg-brand-gold text-brand-forest font-bold px-8 py-4 rounded-full hover:bg-brand-ivory hover:shadow-[0_0_15px_rgba(197,163,90,0.4)] transition-all mt-4">Enroll Now</a>
+            </nav>
+            
+            <!-- Decorative botanical hint in mobile menu -->
+            <div class="absolute bottom-[-5%] right-[-10%] text-brand-leaf/5 rotate-12 pointer-events-none">
+                <i class="ph-fill ph-plant text-[300px]"></i>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="relative min-h-[90vh] flex items-center pt-24 overflow-hidden bg-brand-ivory bg-pattern">
+        
+        <!-- Ambient Glowing Orbs behind the canvas for depth -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+            <div class="absolute -top-20 -right-20 w-[600px] h-[600px] hero-glow-1 blur-3xl rounded-full"></div>
+            <div class="absolute top-40 -left-20 w-[500px] h-[500px] hero-glow-2 blur-3xl rounded-full"></div>
+        </div>
+
+        <!-- 3D Canvas Container -->
+        <canvas id="hero-canvas"></canvas>
+
+        <div class="max-w-7xl mx-auto px-4 md:px-8 w-full hero-content-wrapper grid lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Left: Typography & CTAs -->
+            <div class="lg:col-span-7 space-y-8 z-10 pt-10 pb-20">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-leaf/40 bg-white/60 backdrop-blur-md shadow-sm reveal-up">
+                    <span class="w-2 h-2 rounded-full bg-brand-botanical animate-pulse shadow-[0_0_8px_rgba(35,122,75,0.8)]"></span>
+                    <span class="text-[11px] font-bold tracking-widest text-brand-forest uppercase">Plant Pathology • Conceptual Learning • Exam Prep</span>
+                </div>
+                
+                <h2 class="text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-brand-forest leading-[1.15] reveal-up" style="transition-delay: 0.1s;">
+                    Understand Plant Pathology. <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-forest via-brand-botanical to-brand-leaf italic pb-2 inline-block">Build Your Scientific Future.</span>
+                </h2>
+                
+                <p class="text-lg md:text-xl text-brand-charcoal/85 max-w-2xl leading-relaxed reveal-up font-medium" style="transition-delay: 0.2s;">
+                    From fundamental concepts to advanced competitive examination preparation, explore structured learning designed for students, aspirants, and researchers in Plant Pathology.
+                </p>
+                
+                <div class="flex flex-wrap gap-4 pt-4 reveal-up" style="transition-delay: 0.3s;">
+                    <a href="#levels" class="bg-brand-forest text-brand-ivory px-8 py-4 rounded-full font-semibold hover:bg-brand-botanical transition-all hover:shadow-[0_8px_25px_-5px_rgba(18,61,43,0.4)] hover:-translate-y-1 flex items-center gap-2 group border border-transparent">
+                        Explore Courses
+                        <i class="ph ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="#about" class="bg-white/80 backdrop-blur-sm text-brand-forest border-2 border-brand-sage px-8 py-4 rounded-full font-semibold hover:bg-brand-sage hover:border-brand-leaf/50 transition-all flex items-center gap-2">
+                        Explore Learning Levels
+                    </a>
+                </div>
+
+                <!-- Trust Indicators below buttons -->
+                <div class="flex flex-wrap items-center gap-6 pt-8 border-t border-brand-leaf/20 mt-8 reveal-up" style="transition-delay: 0.4s;">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-sage flex items-center justify-center text-brand-botanical">
+                            <i class="ph ph-graduation-cap text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-brand-forest">45+ NET</p>
+                            <p class="text-xs text-brand-charcoal/70 uppercase tracking-wide">Qualifiers</p>
+                        </div>
+                    </div>
+                    <div class="w-px h-8 bg-brand-leaf/20 hidden sm:block"></div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-sage flex items-center justify-center text-brand-botanical">
+                            <i class="ph ph-certificate text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-brand-forest">30 ARS Mains</p>
+                            <p class="text-xs text-brand-charcoal/70 uppercase tracking-wide">Qualifiers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: 3D Scene Spacer (Canvas handles visual) -->
+            <div class="lg:col-span-5 hidden lg:block h-[600px] relative">
+                <!-- Fallback image for non-JS or error -->
+                <noscript>
+                    <img src="https://placehold.co/600x800/123D2B/F8F7F0?text=Premium+Botanical+Illustration" alt="Botanical Illustration" class="w-full h-full object-cover rounded-3xl shadow-2xl">
+                </noscript>
+                <!-- Decorative elements complementing 3D -->
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-leaf/10 rounded-full blur-3xl"></div>
+                <div class="absolute -left-10 bottom-10 w-48 h-48 bg-brand-gold/10 rounded-full blur-2xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-brand-forest text-brand-ivory py-12 relative z-20 shadow-xl border-y-4 border-brand-gold/20">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-brand-botanical/50 text-center">
+                <div class="stat-item reveal-up">
+                    <h3 class="text-4xl md:text-5xl font-serif font-bold text-brand-leaf mb-2"><span class="counter" data-target="45">0</span>+</h3>
+                    <p class="text-sm font-medium tracking-wide uppercase opacity-90">NET Qualifiers</p>
+                </div>
+                <div class="stat-item reveal-up" style="transition-delay: 0.1s;">
+                    <h3 class="text-4xl md:text-5xl font-serif font-bold text-brand-leaf mb-2"><span class="counter" data-target="30">0</span></h3>
+                    <p class="text-sm font-medium tracking-wide uppercase opacity-90">ARS Mains Qualifiers</p>
+                </div>
+                <div class="stat-item reveal-up" style="transition-delay: 0.2s;">
+                    <h3 class="text-4xl md:text-5xl font-serif font-bold text-brand-leaf mb-2"><span class="counter" data-target="15">0</span></h3>
+                    <p class="text-sm font-medium tracking-wide uppercase opacity-90">ARS Interview Achievers</p>
+                </div>
+                <div class="stat-item reveal-up" style="transition-delay: 0.3s;">
+                    <div class="h-12 md:h-[60px] flex items-center justify-center mb-2">
+                        <i class="ph ph-plant text-4xl md:text-5xl text-brand-leaf"></i>
+                    </div>
+                    <p class="text-sm font-medium tracking-wide uppercase opacity-90">Dedicated Learning</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecosystem" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal-up">
+                <span class="text-brand-botanical font-semibold tracking-wider uppercase text-sm mb-3 block">Learning Ecosystem</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-forest mb-6">Everything You Need to Master Plant Pathology</h2>
+                <p class="text-lg text-brand-charcoal/70">A focused learning ecosystem built around conceptual clarity, structured preparation, regular practice, and effective revision.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Ecosystem Cards Array -->
+                <!-- Live & Recorded -->
+                <div class="group bg-brand-ivory rounded-2xl p-8 border border-brand-sage hover:border-brand-leaf transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 reveal-up">
+                    <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-brand-botanical shadow-sm mb-6 group-hover:bg-brand-botanical group-hover:text-white transition-colors">
+                        <i class="ph ph-video-camera text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-forest mb-3">Live & Recorded Classes</h3>
+                    <p class="text-brand-charcoal/70 mb-6 line-clamp-2">Learn through recorded lectures and available live sessions designed for deep conceptual clarity.</p>
+                    <a href="#" class="text-brand-botanical font-semibold flex items-center gap-2 group-hover:text-brand-forest">
+                        Explore Classes <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Daily Tests -->
+                <div class="group bg-brand-ivory rounded-2xl p-8 border border-brand-sage hover:border-brand-leaf transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 reveal-up" style="transition-delay: 0.1s;">
+                    <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-brand-botanical shadow-sm mb-6 group-hover:bg-brand-botanical group-hover:text-white transition-colors">
+                        <i class="ph ph-calendar-check text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-forest mb-3">Daily Tests</h3>
+                    <p class="text-brand-charcoal/70 mb-6 line-clamp-2">Practice concepts immediately after learning through focused, daily topic-wise assessments.</p>
+                    <a href="#" class="text-brand-botanical font-semibold flex items-center gap-2 group-hover:text-brand-forest">
+                        Start Practising <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Weekly Tests -->
+                <div class="group bg-brand-ivory rounded-2xl p-8 border border-brand-sage hover:border-brand-leaf transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 reveal-up" style="transition-delay: 0.2s;">
+                    <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-brand-botanical shadow-sm mb-6 group-hover:bg-brand-botanical group-hover:text-white transition-colors">
+                        <i class="ph ph-calendar text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-forest mb-3">Weekly Tests</h3>
+                    <p class="text-brand-charcoal/70 mb-6 line-clamp-2">Reinforce your understanding of the week's syllabus through structured weekly practice.</p>
+                    <a href="#" class="text-brand-botanical font-semibold flex items-center gap-2 group-hover:text-brand-forest">
+                        Explore Tests <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Monthly Tests -->
+                <div class="group bg-brand-ivory rounded-2xl p-8 border border-brand-sage hover:border-brand-leaf transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 reveal-up" style="transition-delay: 0.3s;">
+                    <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-brand-botanical shadow-sm mb-6 group-hover:bg-brand-botanical group-hover:text-white transition-colors">
+                        <i class="ph ph-chart-line-up text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-forest mb-3">Monthly Tests</h3>
+                    <p class="text-brand-charcoal/70 mb-6 line-clamp-2">Track long-term preparation and retention through comprehensive monthly assessments.</p>
+                    <a href="#" class="text-brand-botanical font-semibold flex items-center gap-2 group-hover:text-brand-forest">
+                        View Assessments <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Subject-Wise Tests -->
+                <div class="group bg-brand-ivory rounded-2xl p-8 border border-brand-sage hover:border-brand-leaf transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 reveal-up" style="transition-delay: 0.4s;">
+                    <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-brand-botanical shadow-sm mb-6 group-hover:bg-brand-botanical group-hover:text-white transition-colors">
+                        <i class="ph ph-books text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-forest mb-3">Subject-Wise Tests</h3>
+                    <p class="text-brand-charcoal/70 mb-6 line-clamp-2">Focus deeply on individual Plant Pathology subjects to identify specific strengths and weaknesses.</p>
+                    <a href="#" class="text-brand-botanical font-semibold flex items-center gap-2 group-hover:text-brand-forest">
+                        Explore Subjects <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Model Tests -->
+                <div class="group bg-brand-ivory rounded-2xl p-8 border border-brand-sage hover:border-brand-leaf transition-all duration-300 hover:shadow-premium-hover hover:-translate-y-1 reveal-up" style="transition-delay: 0.5s;">
+                    <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-brand-botanical shadow-sm mb-6 group-hover:bg-brand-botanical group-hover:text-white transition-colors">
+                        <i class="ph ph-exam text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-forest mb-3">Final Model Tests</h3>
+                    <p class="text-brand-charcoal/70 mb-6 line-clamp-2">Practise comprehensive examination-style assessments simulating the real exam environment.</p>
+                    <a href="#" class="text-brand-botanical font-semibold flex items-center gap-2 group-hover:text-brand-forest">
+                        View Model Tests <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="levels" class="py-24 bg-brand-ivory border-y border-brand-sage relative overflow-hidden">
+        <!-- Decorative bg -->
+        <div class="absolute right-0 top-0 w-1/3 h-full bg-brand-sage/40 rounded-l-full blur-3xl -z-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 reveal-up">
+                <div class="max-w-2xl">
+                    <span class="text-brand-botanical font-semibold tracking-wider uppercase text-sm mb-3 block">Programmes</span>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-forest mb-4">Choose Your Learning Journey</h2>
+                    <p class="text-lg text-brand-charcoal/70">Structured programmes to support your preparation, from foundational concepts to advanced examination readiness.</p>
+                </div>
+                <a href="#" class="bg-white text-brand-forest border border-brand-sage px-6 py-3 rounded-full font-medium hover:bg-brand-forest hover:text-white transition-colors shrink-0">
+                    Explore All Levels
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Level 1 -->
+                <div class="bg-white rounded-2xl p-8 shadow-premium border border-brand-sage relative flex flex-col h-full reveal-up">
+                    <div class="absolute top-6 right-6 text-brand-leaf/30"><i class="ph-fill ph-plant text-4xl"></i></div>
+                    <span class="inline-block px-3 py-1 bg-brand-sage text-brand-forest text-xs font-bold rounded-full w-max mb-4">Foundation</span>
+                    <h3 class="text-2xl font-serif font-bold text-brand-forest mb-2">Level 1</h3>
+                    <p class="text-brand-charcoal/70 mb-6 text-sm flex-grow">Introduction to basic concepts and fundamentals of Plant Pathology.</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Concept building modules</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Basic study materials</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Fundamental assessments</li>
+                    </ul>
+                    <a href="#" class="w-full block text-center border-2 border-brand-forest text-brand-forest font-semibold py-3 rounded-xl hover:bg-brand-forest hover:text-white transition-colors">View Programme</a>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="bg-white rounded-2xl p-8 shadow-premium border border-brand-sage relative flex flex-col h-full reveal-up" style="transition-delay: 0.1s;">
+                    <div class="absolute top-6 right-6 text-brand-leaf/30"><i class="ph-fill ph-plant text-4xl"></i></div>
+                    <span class="inline-block px-3 py-1 bg-brand-sage text-brand-forest text-xs font-bold rounded-full w-max mb-4">Intermediate</span>
+                    <h3 class="text-2xl font-serif font-bold text-brand-forest mb-2">Level 2</h3>
+                    <p class="text-brand-charcoal/70 mb-6 text-sm flex-grow">Deep dive into specific pathogens, disease cycles, and management.</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Detailed lecture series</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Topic-wise question banks</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Weekly progress tests</li>
+                    </ul>
+                    <a href="#" class="w-full block text-center border-2 border-brand-forest text-brand-forest font-semibold py-3 rounded-xl hover:bg-brand-forest hover:text-white transition-colors">View Programme</a>
+                </div>
+
+                <!-- Level 3 -->
+                <div class="bg-white rounded-2xl p-8 shadow-premium border border-brand-sage relative flex flex-col h-full reveal-up" style="transition-delay: 0.2s;">
+                    <div class="absolute top-6 right-6 text-brand-leaf/30"><i class="ph-fill ph-plant text-4xl"></i></div>
+                    <span class="inline-block px-3 py-1 bg-brand-sage text-brand-forest text-xs font-bold rounded-full w-max mb-4">Advanced</span>
+                    <h3 class="text-2xl font-serif font-bold text-brand-forest mb-2">Level 3</h3>
+                    <p class="text-brand-charcoal/70 mb-6 text-sm flex-grow">Intensive preparation focused on competitive exam structures.</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Advanced conceptual classes</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Previous year questions analysis</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Monthly comprehensive tests</li>
+                    </ul>
+                    <a href="#" class="w-full block text-center border-2 border-brand-forest text-brand-forest font-semibold py-3 rounded-xl hover:bg-brand-forest hover:text-white transition-colors">View Programme</a>
+                </div>
+
+                <!-- Level 4 -->
+                <div class="bg-white rounded-2xl p-8 shadow-premium border border-brand-sage relative flex flex-col h-full reveal-up" style="transition-delay: 0.3s;">
+                    <div class="absolute top-6 right-6 text-brand-leaf/30"><i class="ph-fill ph-plant text-4xl"></i></div>
+                    <span class="inline-block px-3 py-1 bg-brand-sage text-brand-forest text-xs font-bold rounded-full w-max mb-4">Mastery</span>
+                    <h3 class="text-2xl font-serif font-bold text-brand-forest mb-2">Level 4</h3>
+                    <p class="text-brand-charcoal/70 mb-6 text-sm flex-grow">Complete syllabus coverage with extensive revision frameworks.</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Full syllabus recording access</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Dedicated revision classes</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Subject-wise model tests</li>
+                    </ul>
+                    <a href="#" class="w-full block text-center border-2 border-brand-forest text-brand-forest font-semibold py-3 rounded-xl hover:bg-brand-forest hover:text-white transition-colors">View Programme</a>
+                </div>
+
+                <!-- Level 4 Pro - PREMIUM CARD -->
+                <div class="bg-brand-forest rounded-2xl p-8 shadow-2xl border border-brand-gold/30 relative flex flex-col h-full transform lg:-translate-y-4 reveal-up overflow-hidden group" style="transition-delay: 0.4s;">
+                    <!-- Gold shine effect -->
+                    <div class="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:left-[200%] transition-all duration-1000"></div>
+                    
+                    <div class="absolute top-6 right-6 text-brand-gold/20"><i class="ph-fill ph-crown text-4xl"></i></div>
+                    <span class="inline-block px-3 py-1 bg-brand-gold/20 text-brand-gold text-xs font-bold rounded-full w-max mb-4 border border-brand-gold/50">Premium</span>
+                    <h3 class="text-2xl font-serif font-bold text-white mb-2">Level 4 Pro</h3>
+                    <p class="text-brand-sage/80 mb-6 text-sm flex-grow">The ultimate preparation ecosystem. All features included with personalized mentoring.</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2 text-sm text-white"><i class="ph ph-check-circle text-brand-gold mt-0.5"></i> Everything in Level 4</li>
+                        <li class="flex items-start gap-2 text-sm text-white"><i class="ph ph-check-circle text-brand-gold mt-0.5"></i> Exclusive Pro Mold Tests</li>
+                        <li class="flex items-start gap-2 text-sm text-white"><i class="ph ph-check-circle text-brand-gold mt-0.5"></i> 1-on-1 Interview Guidance (ARS)</li>
+                    </ul>
+                    <a href="#" class="w-full block text-center bg-brand-gold text-brand-forest font-bold py-3 rounded-xl hover:bg-white transition-colors shadow-[0_0_15px_rgba(197,163,90,0.4)]">Enroll in Pro</a>
+                </div>
+
+                <!-- Level 5 -->
+                <div class="bg-white rounded-2xl p-8 shadow-premium border border-brand-sage relative flex flex-col h-full reveal-up" style="transition-delay: 0.5s;">
+                    <div class="absolute top-6 right-6 text-brand-leaf/30"><i class="ph-fill ph-flask text-4xl"></i></div>
+                    <span class="inline-block px-3 py-1 bg-brand-sage text-brand-forest text-xs font-bold rounded-full w-max mb-4">Research</span>
+                    <h3 class="text-2xl font-serif font-bold text-brand-forest mb-2">Level 5</h3>
+                    <p class="text-brand-charcoal/70 mb-6 text-sm flex-grow">Research methodology and advanced literature review guidance.</p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Research paper analysis</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Synopsis preparation guide</li>
+                        <li class="flex items-start gap-2 text-sm text-brand-charcoal"><i class="ph ph-check-circle text-brand-botanical mt-0.5"></i> Advanced statistical tools</li>
+                    </ul>
+                    <a href="#" class="w-full block text-center border-2 border-brand-forest text-brand-forest font-semibold py-3 rounded-xl hover:bg-brand-forest hover:text-white transition-colors">View Programme</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="syllabus" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <!-- Text Content -->
+                <div class="reveal-up">
+                    <span class="text-brand-botanical font-semibold tracking-wider uppercase text-sm mb-3 block">Structured Syllabus</span>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-forest mb-6">Learn Every Concept, Step by Step</h2>
+                    <p class="text-lg text-brand-charcoal/70 mb-8">Explore a structured syllabus carefully designed by experts. From historical milestones to molecular plant pathology, everything is organized logically with clear topics, subtopics, and planned learning durations.</p>
+                    
+                    <a href="#" class="inline-flex items-center gap-2 bg-brand-sage text-brand-forest font-semibold px-6 py-3 rounded-full hover:bg-brand-botanical hover:text-white transition-colors">
+                        View Full Syllabus <i class="ph ph-file-text"></i>
+                    </a>
+                </div>
+
+                <!-- Syllabus Accordion/List Preview -->
+                <div class="space-y-4 reveal-up" style="transition-delay: 0.2s;">
+                    <!-- Unit 1 -->
+                    <div class="border border-brand-sage rounded-2xl p-6 hover:shadow-lg transition-shadow bg-brand-ivory/50">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-brand-botanical uppercase tracking-wide">Unit 1</span>
+                            <span class="text-xs text-brand-charcoal/50 font-medium">Estimated: 12 Hours</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-brand-forest mb-2">History and Principles of Plant Pathology</h4>
+                        <p class="text-sm text-brand-charcoal/70 line-clamp-1 mb-4">Milestones in phytopathology, disease concepts, and Koch's postulates.</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <span class="px-2 py-1 bg-white border border-brand-sage rounded text-xs text-brand-charcoal">Fungi</span>
+                            <span class="px-2 py-1 bg-white border border-brand-sage rounded text-xs text-brand-charcoal">Bacteria</span>
+                            <span class="px-2 py-1 bg-white border border-brand-sage rounded text-xs text-brand-charcoal">Viruses</span>
+                        </div>
+                    </div>
+
+                    <!-- Unit 2 -->
+                    <div class="border border-brand-sage rounded-2xl p-6 hover:shadow-lg transition-shadow bg-brand-ivory/50 relative overflow-hidden">
+                        <!-- Blur overlay indicating more content -->
+                        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-brand-botanical uppercase tracking-wide">Unit 2</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-brand-forest mb-2">Epidemiology and Disease Forecasting</h4>
+                        <p class="text-sm text-brand-charcoal/70 line-clamp-1 mb-4">Disease triangle, epidemic development, and forecasting models.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resources" class="py-24 bg-brand-sage/30">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal-up">
+                <span class="text-brand-botanical font-semibold tracking-wider uppercase text-sm mb-3 block">Library</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-forest mb-6">Resources for Deeper Understanding</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Resource Categories -->
+                <a href="#" class="group block bg-white p-6 rounded-2xl border border-brand-sage shadow-sm hover:shadow-premium transition-all text-center reveal-up">
+                    <div class="w-16 h-16 mx-auto bg-brand-ivory rounded-full flex items-center justify-center text-brand-botanical mb-4 group-hover:scale-110 transition-transform">
+                        <i class="ph ph-book-open text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold text-brand-forest mb-1">Books</h4>
+                    <p class="text-xs text-brand-charcoal/60">Standard References</p>
+                </a>
+                
+                <a href="#" class="group block bg-white p-6 rounded-2xl border border-brand-sage shadow-sm hover:shadow-premium transition-all text-center reveal-up" style="transition-delay: 0.1s;">
+                    <div class="w-16 h-16 mx-auto bg-brand-ivory rounded-full flex items-center justify-center text-brand-botanical mb-4 group-hover:scale-110 transition-transform">
+                        <i class="ph ph-files text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold text-brand-forest mb-1">Study Material</h4>
+                    <p class="text-xs text-brand-charcoal/60">Enrolled Students</p>
+                </a>
+
+                <a href="#" class="group block bg-white p-6 rounded-2xl border border-brand-sage shadow-sm hover:shadow-premium transition-all text-center reveal-up" style="transition-delay: 0.2s;">
+                    <div class="w-16 h-16 mx-auto bg-brand-ivory rounded-full flex items-center justify-center text-brand-botanical mb-4 group-hover:scale-110 transition-transform">
+                        <i class="ph ph-clock-counter-clockwise text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold text-brand-forest mb-1">Previous Year</h4>
+                    <p class="text-xs text-brand-charcoal/60">NET & ARS Papers</p>
+                </a>
+
+                <a href="#" class="group block bg-white p-6 rounded-2xl border border-brand-sage shadow-sm hover:shadow-premium transition-all text-center reveal-up" style="transition-delay: 0.3s;">
+                    <div class="w-16 h-16 mx-auto bg-brand-ivory rounded-full flex items-center justify-center text-brand-botanical mb-4 group-hover:scale-110 transition-transform relative">
+                        <span class="absolute -top-1 -right-1 bg-brand-gold text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">FREE</span>
+                        <i class="ph ph-youtube-logo text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold text-brand-forest mb-1">Video Lectures</h4>
+                    <p class="text-xs text-brand-charcoal/60">Open Resources</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <!-- Brand Story -->
+            <div class="grid lg:grid-cols-2 gap-16 items-center mb-32 reveal-up">
+                <div class="order-2 lg:order-1 relative">
+                    <div class="aspect-square rounded-3xl overflow-hidden bg-brand-sage relative">
+                         <img src="https://placehold.co/800x800/237A4B/F8F7F0?text=Botanical+Growth" alt="Plant Growth" class="w-full h-full object-cover opacity-80 mix-blend-multiply">
+                         <!-- Decorative Frame -->
+                         <div class="absolute inset-4 border border-white/40 rounded-2xl pointer-events-none"></div>
+                    </div>
+                    <div class="absolute -bottom-8 -right-8 bg-brand-forest text-brand-ivory p-8 rounded-2xl shadow-2xl max-w-xs">
+                        <p class="font-serif italic text-xl">"One Subject.<br>One Platform."</p>
+                    </div>
+                </div>
+                
+                <div class="order-1 lg:order-2">
+                    <span class="text-brand-botanical font-semibold tracking-wider uppercase text-sm mb-3 block">Our Story</span>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-forest mb-6">Built on a Passion for Plant Science</h2>
+                    <p class="text-lg text-brand-charcoal/80 mb-6 leading-relaxed">
+                        Geeky Researcher began with the shared vision of two students, Nirmal Raj and N.H. Shankar Reddy, who wanted to make quality knowledge more accessible.
+                    </p>
+                    <p class="text-lg text-brand-charcoal/80 mb-8 leading-relaxed">
+                        What started as a learning initiative in Plant Science and Plant Pathology grew into a focused educational platform offering concept-driven lectures, examination preparation, revision, and research-oriented learning.
+                    </p>
+                    <div class="bg-brand-ivory p-6 border-l-4 border-brand-botanical rounded-r-xl mb-8">
+                        <p class="font-medium text-brand-forest"><strong>Mission:</strong> To create a focused, reliable, and academically strong learning ecosystem exclusively for Plant Pathology.</p>
+                    </div>
+                    <a href="#" class="inline-flex items-center gap-2 text-brand-forest font-bold hover:text-brand-botanical transition-colors pb-1 border-b-2 border-brand-botanical">
+                        Know Our Story <i class="ph ph-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Meet the Experts -->
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal-up">
+                <span class="text-brand-botanical font-semibold tracking-wider uppercase text-sm mb-3 block">Faculty</span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-forest mb-6">Learn from Experienced Academics</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Expert 1 -->
+                <div class="text-center group reveal-up">
+                    <div class="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-brand-ivory shadow-lg group-hover:border-brand-leaf transition-colors bg-brand-sage">
+                        <img src="https://placehold.co/400x400/E6EFE5/123D2B?text=NSR" alt="N.H. Shankar Reddy" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-forest">N.H. Shankar Reddy, Ph.D.</h4>
+                    <p class="text-brand-botanical font-medium text-sm mb-2">Plant Pathology</p>
+                    <p class="text-xs text-brand-charcoal/60 uppercase tracking-widest">Founder & Tutor</p>
+                </div>
+
+                <!-- Expert 2 -->
+                <div class="text-center group reveal-up" style="transition-delay: 0.1s;">
+                    <div class="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-brand-ivory shadow-lg group-hover:border-brand-leaf transition-colors bg-brand-sage">
+                        <img src="https://placehold.co/400x400/E6EFE5/123D2B?text=NR" alt="Dr. R. Nirmala Raj" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-forest">Dr. R. Nirmala Raj, Ph.D.</h4>
+                    <p class="text-brand-botanical font-medium text-sm mb-2">Genetics and Plant Breeding</p>
+                    <p class="text-xs text-brand-charcoal/60 uppercase tracking-widest">Founder</p>
+                </div>
+
+                <!-- Expert 3 -->
+                <div class="text-center group reveal-up" style="transition-delay: 0.2s;">
+                    <div class="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-brand-ivory shadow-lg group-hover:border-brand-leaf transition-colors bg-brand-sage">
+                        <img src="https://placehold.co/400x400/E6EFE5/123D2B?text=MGR" alt="Dr. M. Gurivi Reddy" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-forest">Dr. M. Gurivi Reddy, Ph.D.</h4>
+                    <p class="text-brand-botanical font-medium text-sm mb-2">Plant Pathology</p>
+                    <p class="text-xs text-brand-charcoal/60 uppercase tracking-widest">Visiting Member</p>
+                </div>
+
+                <!-- Expert 4 -->
+                <div class="text-center group reveal-up" style="transition-delay: 0.3s;">
+                    <div class="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-brand-ivory shadow-lg group-hover:border-brand-leaf transition-colors bg-brand-sage">
+                        <img src="https://placehold.co/400x400/E6EFE5/123D2B?text=GS" alt="Mr. G. Somasekhar" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-forest">Mr. G. Somasekhar</h4>
+                    <p class="text-transparent font-medium text-sm mb-2 select-none">-</p> <!-- Spacer -->
+                    <p class="text-xs text-brand-charcoal/60 uppercase tracking-widest">Financial Advisor</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-brand-forest relative overflow-hidden">
+        <!-- 3D/Botanical background hint -->
+        <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+CiAgPHBhdGggZD0iTTU0LjYyNyAzNS4xNThjLS43NTYuNDI3LTEuNjQ2LjY1LTIuNTYuNjVhNS4xNSA1LjE1IDAgMCAxLTIuNTYtLjY1Yy0xLjc3LTEtMi44Ni0yLjg5LTIuODYtNC45NnMyLjItMy45NiAyLjg2LTQuOTZjLjc1Ni0uNDI3IDEuNjQ2LS42NSAyLjU2LS42NXMxLjgwNC4yMjMgMi41Ni42NWMxLjc3IDEgMi44NiAyLjg5IDIuODYgNC45NnMtMS4wOSAzLjk2LTIuODYgNC45NnoiIGZpbGw9IiM3NUI4NUEiIGZpbGwtb3BhY2l0eT0iLjQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgo8L3N2Zz4=')]"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10 reveal-up">
+            <h2 class="text-4xl md:text-5xl font-serif font-bold text-white mb-6">Your Plant Pathology Journey Starts Here.</h2>
+            <p class="text-lg text-brand-sage mb-10 max-w-2xl mx-auto">Choose your learning level, strengthen your concepts, and prepare with a structured approach designed for success.</p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#levels" class="bg-brand-leaf text-brand-forest px-8 py-4 rounded-full font-bold hover:bg-white transition-all hover:shadow-xl hover:-translate-y-1">
+                    Explore Courses
+                </a>
+                <a href="#" class="bg-transparent text-white border border-brand-sage/30 px-8 py-4 rounded-full font-medium hover:bg-white/10 transition-all">
+                    Create Your Account
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-brand-charcoal text-brand-sage pt-20 pb-10 border-t-4 border-brand-leaf">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                
+                <!-- Brand -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-full bg-brand-leaf flex items-center justify-center text-brand-forest">
+                            <i class="ph-bold ph-leaf"></i>
+                        </div>
+                        <span class="font-serif font-bold text-lg text-white">Geeky Researcher</span>
+                    </div>
+                    <p class="font-serif italic text-brand-gold">One Subject. One Platform.</p>
+                    <p class="text-sm text-brand-sage/70 leading-relaxed">A specialized educational platform dedicated exclusively to Plant Pathology learning and competitive examination preparation.</p>
+                </div>
+
+                <!-- Explore -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 tracking-wide">Explore</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#about" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">About Us</a></li>
+                        <li><a href="#levels" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Levels & Courses</a></li>
+                        <li><a href="#syllabus" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Structured Syllabus</a></li>
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Student Achievements</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 tracking-wide">Learning Resources</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Live & Recorded Classes</a></li>
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Practice Tests</a></li>
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Previous-Year Questions</a></li>
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Revision Resources</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h4 class="text-white font-bold mb-6 tracking-wide">Support</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Student Login</a></li>
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Terms & Conditions</a></li>
+                        <li><a href="#" class="text-brand-sage/70 hover:text-brand-leaf transition-colors">Privacy Policy</a></li>
+                    </ul>
+                    <div class="mt-6 flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-leaf hover:text-brand-forest transition-all text-xl"><i class="ph ph-youtube-logo"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-leaf hover:text-brand-forest transition-all text-xl"><i class="ph ph-telegram-logo"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-leaf hover:text-brand-forest transition-all text-xl"><i class="ph ph-envelope-simple"></i></a>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-brand-sage/50">
+                <p>&copy; 2024 Geeky Researcher. All rights reserved.</p>
+                <p>Designed for Plant Pathology Academics.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            
+            // --- Navigation Scroll Effect ---
+            const nav = document.getElementById('main-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('nav-scrolled');
+                } else {
+                    nav.classList.remove('nav-scrolled');
+                }
+            });
+
+            // --- Mobile Menu Toggle Implementation ---
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            let isMenuOpen = false;
+
+            const toggleMenu = () => {
+                isMenuOpen = !isMenuOpen;
+                const icon = mobileBtn.querySelector('i');
+                
+                if(isMenuOpen) {
+                    // Open Menu
+                    icon.classList.remove('ph-list');
+                    icon.classList.add('ph-x');
+                    // Change button color to contrast with the dark forest green overlay
+                    mobileBtn.classList.remove('text-brand-forest');
+                    mobileBtn.classList.add('text-brand-ivory');
+                    
+                    mobileMenu.classList.remove('translate-x-full');
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                } else {
+                    // Close Menu
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                    // Revert button color
+                    mobileBtn.classList.add('text-brand-forest');
+                    mobileBtn.classList.remove('text-brand-ivory');
+                    
+                    mobileMenu.classList.add('translate-x-full');
+                    document.body.style.overflow = ''; // Restore background scrolling
+                }
+            };
+
+            mobileBtn.addEventListener('click', toggleMenu);
+            
+            // Close menu when a link is clicked
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (isMenuOpen) toggleMenu();
+                });
+            });
+
+            // --- GSAP Animations ---
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Reveal Up Animation for general elements
+            gsap.utils.toArray('.reveal-up').forEach(element => {
+                gsap.to(element, {
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power3.out"
+                });
+            });
+
+            // Number Counter Animation
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                
+                ScrollTrigger.create({
+                    trigger: counter,
+                    start: "top 90%",
+                    once: true,
+                    onEnter: () => {
+                        let current = 0;
+                        const increment = target / 50; // speed
+                        const updateCounter = () => {
+                            current += increment;
+                            if (current < target) {
+                                counter.innerText = Math.ceil(current);
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.innerText = target;
+                            }
+                        };
+                        updateCounter();
+                    }
+                });
+            });
+
+            // --- THREE.JS Botanical Hero Scene ---
+            const initThreeJS = () => {
+                const canvas = document.getElementById('hero-canvas');
+                if (!canvas) return;
+
+                const scene = new THREE.Scene();
+                scene.background = null; // Transparent to show CSS gradient and glows
+
+                const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 6;
+                camera.position.x = 2; // Shift right to balance with text
+
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                // High-resolution plane to allow for smooth vertex displacement (waves)
+                const geometry = new THREE.PlaneGeometry(10, 10, 100, 100);
+                
+                // Premium organic material resembling silky leaf tissue
+                const material = new THREE.MeshPhysicalMaterial({
+                    color: 0x123D2B, // Deep Forest Green base
+                    emissive: 0x05100a, // Very subtle glow
+                    roughness: 0.3,
+                    metalness: 0.1,
+                    clearcoat: 0.7, // Adds a glossy sheen like a waxy leaf
+                    clearcoatRoughness: 0.2,
+                    side: THREE.DoubleSide,
+                    flatShading: false
+                });
+
+                const leafMesh = new THREE.Mesh(geometry, material);
+                leafMesh.rotation.x = -Math.PI / 2.5;
+                leafMesh.rotation.z = Math.PI / 4;
+                leafMesh.position.x = 3.5; // Position on the right side
+                leafMesh.position.y = -1;
+                scene.add(leafMesh);
+
+                // Elegant wireframe overlay for a "scientific/research" vibe
+                const wireframeMaterial = new THREE.LineBasicMaterial({ 
+                    color: 0x75B85A, 
+                    transparent: true, 
+                    opacity: 0.08 
+                });
+                const wireframe = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), wireframeMaterial);
+                leafMesh.add(wireframe);
+
+                const particleGeometry = new THREE.BufferGeometry();
+                const particleCount = 150;
+                const posArray = new Float32Array(particleCount * 3);
+                const randomOffsets = new Float32Array(particleCount); // For individual particle sway
+
+                for(let i = 0; i < particleCount; i++) {
+                    posArray[i * 3] = (Math.random() - 0.5) * 12 + 3; // X spread (biased right)
+                    posArray[i * 3 + 1] = (Math.random() - 0.5) * 10;     // Y spread
+                    posArray[i * 3 + 2] = (Math.random() - 0.5) * 5;      // Z spread
+                    randomOffsets[i] = Math.random() * Math.PI * 2;
+                }
+                
+                particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                particleGeometry.setAttribute('aOffset', new THREE.BufferAttribute(randomOffsets, 1));
+                
+                const particleMaterial = new THREE.PointsMaterial({
+                    size: 0.04,
+                    color: 0xC5A35A, // Botanical Gold
+                    transparent: true,
+                    opacity: 0.8,
+                    blending: THREE.AdditiveBlending
+                });
+                const particlesMesh = new THREE.Points(particleGeometry, particleMaterial);
+                scene.add(particlesMesh);
+
+                const ambientLight = new THREE.AmbientLight(0xF8F7F0, 1.2); // Warm Ivory ambient
+                scene.add(ambientLight);
+
+                const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
+                mainLight.position.set(5, 8, 5);
+                scene.add(mainLight);
+
+                // Golden rim light to highlight the curves
+                const rimLight = new THREE.PointLight(0xC5A35A, 3, 20); 
+                rimLight.position.set(5, -2, 2);
+                scene.add(rimLight);
+                
+                // Cool botanical green fill light
+                const fillLight = new THREE.PointLight(0x75B85A, 2, 20);
+                fillLight.position.set(0, 5, -2);
+                scene.add(fillLight);
+
+                let mouseX = 0;
+                let mouseY = 0;
+                let targetX = 0;
+                let targetY = 0;
+                const windowHalfX = window.innerWidth / 2;
+                const windowHalfY = window.innerHeight / 2;
+
+                document.addEventListener('mousemove', (event) => {
+                    mouseX = (event.clientX - windowHalfX) * 0.001;
+                    mouseY = (event.clientY - windowHalfY) * 0.001;
+                });
+
+                const clock = new THREE.Clock();
+
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    const time = clock.getElapsedTime();
+
+                    // Smooth mouse follow for parallax
+                    targetX = mouseX * 0.5;
+                    targetY = mouseY * 0.5;
+                    
+                    camera.position.x += (mouseX * 1.5 + 2 - camera.position.x) * 0.05;
+                    camera.position.y += (-mouseY * 1.5 - camera.position.y) * 0.05;
+                    camera.lookAt(new THREE.Vector3(2, 0, 0));
+
+                    // Gentle floating rotation of the entire leaf structure
+                    leafMesh.rotation.y = Math.sin(time * 0.15) * 0.1 + targetX;
+                    leafMesh.rotation.x = -Math.PI / 2.5 + Math.cos(time * 0.2) * 0.05 + targetY;
+
+                    // Dynamic Vertex Displacement (Creates the flowing organic waves)
+                    const positions = geometry.attributes.position.array;
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const x = positions[i];
+                        const y = positions[i + 1];
+                        // Apply complex sine waves based on X, Y, and Time to modify Z
+                        positions[i + 2] = Math.sin(x * 0.8 + time * 1.2) * 0.4 + Math.cos(y * 0.6 + time * 0.8) * 0.4;
+                    }
+                    geometry.attributes.position.needsUpdate = true;
+                    // Recalculate normals so the light reflects dynamically off the moving waves
+                    geometry.computeVertexNormals();
+
+                    // Spore Particle Animation
+                    const pPositions = particlesMesh.geometry.attributes.position.array;
+                    const pOffsets = particlesMesh.geometry.attributes.aOffset.array;
+                    
+                    for(let i = 0; i < particleCount; i++) {
+                        // Gentle upward drift
+                        pPositions[i * 3 + 1] += 0.005; 
+                        // Gentle horizontal sway
+                        pPositions[i * 3] += Math.sin(time * 0.5 + pOffsets[i]) * 0.002;
+                        
+                        // Reset particle if it floats too high
+                        if(pPositions[i * 3 + 1] > 5) {
+                            pPositions[i * 3 + 1] = -5;
+                        }
+                    }
+                    particlesMesh.geometry.attributes.position.needsUpdate = true;
+                    particlesMesh.rotation.y = time * 0.05;
+
+                    renderer.render(scene, camera);
+                };
+
+                animate();
+
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+            };
+
+            // Initialize 3D only on non-mobile for performance, or check capability
+            if(window.innerWidth > 768) {
+                initThreeJS();
+            } else {
+                // Remove canvas on mobile to save battery, fallback image handles it
+                const canvas = document.getElementById('hero-canvas');
+                if(canvas) canvas.remove();
+            }
+        });
+    </script>
+</body>
+</html>
