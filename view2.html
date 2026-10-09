@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geeky Researcher | Premium Plant Pathology LMS</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --forest: #123D2B;
+            --botanical: #287747;
+            --leaf: #86B96C;
+            --ivory: #F8F7F0;
+            --sage: #E9F0E7;
+            --charcoal: #202720;
+            --gold: #C3A15B;
+            
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --shadow-sm: 0 4px 6px rgba(18, 61, 43, 0.05);
+            --shadow-md: 0 10px 30px rgba(18, 61, 43, 0.08);
+            --shadow-lg: 0 20px 40px rgba(18, 61, 43, 0.12);
+            
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--charcoal);
+            background-color: var(--ivory);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            color: var(--forest);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Layout Utility */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-padding {
+            padding: 6rem 0;
+        }
+
+        /* Typography Utility */
+        .eyebrow {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--botanical);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem auto;
+            color: #555;
+            font-size: 1.125rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.75rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background-color: var(--forest);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--botanical);
+            box-shadow: 0 8px 20px rgba(40, 119, 71, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--forest);
+            border-color: var(--forest);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--forest);
+            color: white;
+        }
+
+        .btn-gold {
+            background-color: var(--gold);
+            color: white;
+        }
+        
+        .btn-gold:hover {
+            background-color: #a88a4c;
+            box-shadow: 0 8px 20px rgba(195, 161, 91, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(248, 247, 240, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--forest);
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--botanical);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger {
+            width: 24px;
+            height: 2px;
+            background-color: var(--forest);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .hamburger::before, .hamburger::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 2px;
+            background-color: var(--forest);
+            transition: var(--transition);
+            left: 0;
+        }
+
+        .hamburger::before { top: -8px; }
+        .hamburger::after { bottom: -8px; }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px; /* offset for nav */
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--sage) 0%, var(--ivory) 100%);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content {
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: #444;
+            margin-bottom: 2.5rem;
+            max-width: 90%;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-mini-stats {
+            display: flex;
+            gap: 2rem;
+            border-top: 1px solid rgba(18, 61, 43, 0.1);
+            padding-top: 1.5rem;
+        }
+
+        .mini-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mini-stat-num {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--botanical);
+        }
+
+        .mini-stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+
+        /* 3D Botanical Scene (CSS only) */
+        .hero-visual {
+            position: relative;
+            height: 600px;
+            width: 100%;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .scene-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .layer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .leaf-main {
+            width: 450px;
+            height: 450px;
+            background-image: url('https://images.unsplash.com/photo-1599427288764-a78b532bfbc2?q=80&w=800&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50% 0 50% 50%;
+            box-shadow: 20px 20px 60px rgba(0,0,0,0.15);
+            /* Simulating leaf shape via border radius */
+            transform: translate(-50%, -50%) translateZ(0px) rotate(-15deg);
+            z-index: 2;
+        }
+
+        .leaf-sub {
+            width: 200px;
+            height: 200px;
+            background-image: url('https://images.unsplash.com/photo-1611736657904-8979313a45c3?q=80&w=400&auto=format&fit=crop');
+            background-size: cover;
+            border-radius: 0 50% 50% 50%;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+            filter: sepia(0.3) hue-rotate(10deg); /* Simulating disease/color variation */
+            transform: translate(-10%, 30%) translateZ(80px) rotate(25deg);
+            z-index: 3;
+        }
+
+        .spores {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .spore {
+            position: absolute;
+            background-color: var(--gold);
+            border-radius: 50%;
+            opacity: 0.6;
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        .circle-bg {
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            border: 1px solid rgba(134, 185, 108, 0.3);
+            transform: translate(-50%, -50%) translateZ(-100px);
+            z-index: 1;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background-color: white;
+            border-bottom: 1px solid var(--sage);
+            padding: 3rem 0;
+            position: relative;
+            z-index: 20;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            position: relative;
+        }
+        
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -1rem;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background-color: var(--sage);
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--forest);
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Ecosystem Section */
+        .ecosystem-section {
+            background-color: var(--ivory);
+        }
+
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .eco-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .eco-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--sage);
+        }
+
+        .eco-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--sage);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--botanical);
+        }
+
+        .eco-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .eco-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .eco-link {
+            font-weight: 600;
+            color: var(--botanical);
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .eco-link::after {
+            content: '→';
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .eco-card:hover .eco-link::after {
+            transform: translateX(5px);
+        }
+
+        /* Courses Section */
+        .courses-section {
+            background-color: white;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .course-card {
+            background: var(--ivory);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--sage);
+        }
+        
+        .course-card.pro {
+            border: 2px solid var(--gold);
+            background: linear-gradient(to bottom, #fffdf8, var(--ivory));
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .course-img {
+            height: 180px;
+            background-color: var(--forest);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .course-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, rgba(32,39,32,0.8));
+        }
+
+        .course-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--gold);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 2;
+            letter-spacing: 1px;
+        }
+
+        .course-content {
+            padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-desc {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--sage);
+            padding-bottom: 1rem;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .course-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .course-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .course-features li {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .course-features li::before {
+            content: '✓';
+            color: var(--botanical);
+            font-weight: bold;
+        }
+
+        .course-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .course-price {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--forest);
+        }
+
+        .explore-all-wrap {
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        /* Syllabus Section */
+        .syllabus-section {
+            background-color: var(--sage);
+            position: relative;
+        }
+        
+        .syllabus-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23123d2b' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .syllabus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .unit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .unit-card h4 {
+            font-size: 1.1rem;
+            color: var(--botanical);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .unit-time {
+            font-size: 0.75rem;
+            font-family: var(--font-body);
+            color: #888;
+            background: var(--sage);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+        }
+
+        .topic-list {
+            margin-left: 1rem;
+        }
+
+        .topic-list li {
+            font-size: 0.9rem;
+            color: #444;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        .topic-list li::before {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            top: 0.5rem;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        /* Resources Section */
+        .resources-section {
+            background-color: var(--ivory);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .resource-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-5px);
+        }
+
+        .resource-img {
+            height: 160px;
+            background-color: #eee;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .resource-type {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 0.5rem;
+            background: rgba(18, 61, 43, 0.8);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+        }
+        
+        .resource-access {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .access-free { background: var(--leaf); color: white; }
+        .access-pro { background: var(--gold); color: white; }
+
+        .resource-content {
+            padding: 1.5rem;
+        }
+
+        .resource-content h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-content p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Achievements Section */
+        .achievements-section {
+            background-color: white;
+        }
+
+        .achievers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .achiever-card {
+            text-align: center;
+        }
+
+        .achiever-img-wrap {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--botanical), var(--gold));
+        }
+
+        .achiever-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+        }
+
+        .achiever-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--forest);
+            margin-bottom: 0.25rem;
+        }
+
+        .achiever-exam {
+            font-size: 0.85rem;
+            color: var(--botanical);
+            font-weight: 500;
+        }
+
+        .text-lists-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            background: var(--sage);
+            padding: 3rem;
+            border-radius: 12px;
+        }
+
+        .name-list h4 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(18,61,43,0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .name-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        /* About & Faculty */
+        .about-faculty-section {
+            background-color: var(--ivory);
+            border-top: 1px solid var(--sage);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 6rem;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #444;
+        }
+
+        .about-quote {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--botanical);
+            font-style: italic;
+            border-left: 3px solid var(--gold);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .about-image {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .faculty-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .faculty-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .faculty-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            background-color: var(--sage);
+        }
+
+        .faculty-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .faculty-role {
+            font-size: 0.85rem;
+            color: var(--botanical);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .faculty-qual {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background-color: var(--forest);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding: 6rem 0;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-buttons .btn-secondary {
+            border-color: white;
+            color: white;
+        }
+        
+        .cta-buttons .btn-secondary:hover {
+            background-color: white;
+            color: var(--forest);
+        }
+
+        .cta-bg-leaf {
+            position: absolute;
+            opacity: 0.1;
+            filter: blur(2px);
+        }
+        
+        .leaf-1 { width: 300px; top: -50px; left: -100px; transform: rotate(45deg); }
+        .leaf-2 { width: 400px; bottom: -100px; right: -50px; transform: rotate(-20deg); }
+
+        /* Footer */
+        .footer {
+            background-color: var(--charcoal);
+            color: white;
+            padding: 5rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-brand .logo {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand .logo svg {
+            fill: var(--leaf);
+        }
+
+        .footer-tagline {
+            color: var(--leaf);
+            font-family: var(--font-heading);
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .footer-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            max-width: 80%;
+        }
+
+        .footer-links h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-family: var(--font-body);
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-grid, .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .hero-visual {
+                height: 400px;
+                order: -1;
+            }
+            .faculty-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .text-lists-container {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions .btn:not(.menu-toggle) {
+                display: none; /* simple mobile menu hiding for now, JS toggles class */
+            }
+            
+            .nav-links.mobile-active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 2rem;
+                box-shadow: var(--shadow-md);
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+            
+            .stat-item:nth-child(2)::after {
+                display: none;
+            }
+
+            .ecosystem-grid, .courses-grid, .text-lists-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1.2-12.7c-.5-.9-1.3-1.6-2.3-1.9-.3-.1-.6.1-.7.3-.1.3.1.6.3.7.8.2 1.4.8 1.8 1.5.2.4.6.6 1 .5.4-.1.7-.5.5-1.1zm2.4.9c0-.4.3-.7.7-.7h.1c.4 0 .7.3.7.7v3.3h-1.5v-3.3zm-3.6 4.6c.3 0 .5.2.5.5v2.8c0 .3-.2.5-.5.5s-.5-.2-.5-.5V15.3c0-.3.2-.5.5-.5zm6.7-1.1c-.2-.2-.5-.2-.7 0l-1.5 1.5v-1.1c0-.4-.3-.7-.7-.7h-2.2c-.4 0-.7.3-.7.7v1.1l-1.5-1.5c-.2-.2-.5-.2-.7 0-.2.2-.2.5 0 .7l2.2 2.2V19c0 .4.3.7.7.7h1.5c.4 0 .7-.3.7-.7v-1.1l2.2-2.2c.2-.2.2-.5 0-.7z"/>
+                </svg>
+                Geeky Researcher
+            </a>
+            
+            <nav class="nav-links" id="nav-links">
+                <a href="#home" class="active">Home</a>
+                <a href="#about">About</a>
+                <a href="#courses">Levels</a>
+                <a href="#syllabus">Syllabus</a>
+                <a href="#resources">Resources</a>
+                <a href="#achievements">Achievements</a>
+            </nav>
+            
+            <div class="nav-actions">
+                <a href="#login" style="font-weight: 500;">Login</a>
+                <a href="#courses" class="btn btn-primary">Enroll Now</a>
+                <button class="menu-toggle" id="mobile-menu-btn" aria-label="Toggle Menu">
+                    <div class="hamburger"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+                <div class="hero-content reveal active">
+                    <span class="eyebrow">Plant Pathology | Science | Competitive Exams</span>
+                    <h1>Understand Plant Pathology. Grow Beyond Boundaries.</h1>
+                    <p>Build strong scientific foundations, master important concepts, and prepare for competitive examinations through structured learning designed specifically for Plant Pathology students and researchers.</p>
+                    
+                    <div class="hero-buttons">
+                        <a href="#courses" class="btn btn-primary">Explore Courses</a>
+                        <a href="#about" class="btn btn-secondary">Discover Our Path</a>
+                    </div>
+                    
+                    <div class="hero-mini-stats">
+                        <div class="mini-stat">
+                            <span class="mini-stat-num">45+</span>
+                            <span class="mini-stat-label">NET Qualifiers</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-num">30</span>
+                            <span class="mini-stat-label">ARS Mains</span>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-stat-num">15</span>
+                            <span class="mini-stat-label">ARS Interviews</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-visual" id="hero-3d">
+                    <div class="scene-container">
+                        <div class="circle-bg layer" data-depth="0.1"></div>
+                        <div class="layer leaf-main" data-depth="0.3"></div>
+                        <div class="layer leaf-sub" data-depth="0.6"></div>
+                        <div class="layer spores" data-depth="0.9" id="spores-container">
+                            <!-- Spores injected via JS for cleaner HTML -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section reveal">
+            <div class="container stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="45">0</span>+</div>
+                    <div class="stat-label">NET Qualifiers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="30">0</span></div>
+                    <div class="stat-label">ARS Mains Qualifiers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number"><span class="counter" data-target="15">0</span></div>
+                    <div class="stat-label">ARS Interview Achievers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" style="font-size: 2rem;">Plant<br>Pathology</div>
+                    <div class="stat-label">Sole Specialization</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding ecosystem-section" id="ecosystem">
+            <div class="container">
+                <span class="eyebrow" style="text-align: center;">Learning Experience</span>
+                <h2 class="section-title reveal">Your Complete Learning Ecosystem</h2>
+                <p class="section-subtitle reveal">Everything you need to learn concepts, practise regularly, revise effectively, and prepare with confidence.</p>
+                
+                <div class="ecosystem-grid reveal">
+                    <!-- Card 1 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3>Live & Recorded Classes</h3>
+                        <p>Engaging sessions building conceptual clarity from fundamentals to advanced topics.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3>Daily Tests</h3>
+                        <p>Consistent practice to reinforce daily learning and build exam temperament.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3>Weekly Tests</h3>
+                        <p>Comprehensive assessment of the week's syllabus to track steady progress.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        </div>
+                        <h3>Monthly Tests</h3>
+                        <p>Macro-level evaluation to ensure long-term retention of broad subjects.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <h3>Subject-Wise Tests</h3>
+                        <p>Deep-dive assessments focusing on specific domains within Plant Pathology.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+                        </div>
+                        <h3>Final Model Tests</h3>
+                        <p>Full-length simulations replicating exact exam patterns and difficulty.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 7 -->
+                    <div class="eco-card" style="background: var(--sage); border-color: var(--leaf);">
+                        <div class="eco-icon" style="background: var(--leaf); color: white;">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3>Pro Molds Special Tests</h3>
+                        <p>Exclusive advanced testing modules designed for targeted higher-order thinking.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 8 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3>Previous-Year Questions</h3>
+                        <p>Extensive repository of NET and ARS past papers with detailed solutions.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                    <!-- Card 9 -->
+                    <div class="eco-card">
+                        <div class="eco-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </div>
+                        <h3>Revision Classes</h3>
+                        <p>High-yield, fast-paced sessions covering crucial topics before examinations.</p>
+                        <a href="#" class="eco-link">Learn more</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding courses-section" id="courses">
+            <div class="container">
+                <span class="eyebrow" style="text-align: center;">Curriculum</span>
+                <h2 class="section-title reveal">Choose Your Path to Academic Excellence</h2>
+                <p class="section-subtitle reveal">Explore structured programmes designed to support different stages of Plant Pathology preparation.</p>
+                
+                <div class="courses-grid reveal">
+                    <!-- Level 1 -->
+                    <div class="course-card">
+                        <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=600&auto=format&fit=crop');"></div>
+                        <div class="course-content">
+                            <h3>Level 1 Foundation</h3>
+                            <p class="course-desc">Core concepts and introductory principles for beginners.</p>
+                            <div class="course-meta">
+                                <span><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> [Duration TBD]</span>
+                                <span><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg> Core Subjects</span>
+                            </div>
+                            <ul class="course-features">
+                                <li>Basic Syllabus Coverage</li>
+                                <li>Introductory Tests</li>
+                                <li>Standard Study Material</li>
+                            </ul>
+                            <div class="course-footer">
+                                <span class="course-price">[Price TBD]</span>
+                                <button class="btn btn-secondary">View Programme</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level 2 -->
+                    <div class="course-card">
+                        <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=600&auto=format&fit=crop');"></div>
+                        <div class="course-content">
+                            <h3>Level 2 Intermediate</h3>
+                            <p class="course-desc">Building upon basics with intermediate pathological concepts.</p>
+                            <div class="course-meta">
+                                <span><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> [Duration TBD]</span>
+                            </div>
+                            <ul class="course-features">
+                                <li>Advanced Subject Modules</li>
+                                <li>Weekly Assessment Series</li>
+                                <li>Doubt Clearance Sessions</li>
+                            </ul>
+                            <div class="course-footer">
+                                <span class="course-price">[Price TBD]</span>
+                                <button class="btn btn-secondary">View Programme</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level 3 -->
+                    <div class="course-card">
+                        <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1530836369250-ef71a3f5e4bf?q=80&w=600&auto=format&fit=crop');"></div>
+                        <div class="course-content">
+                            <h3>Level 3 Advanced</h3>
+                            <p class="course-desc">In-depth preparation targeting competitive examinations.</p>
+                            <div class="course-meta">
+                                <span><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> [Duration TBD]</span>
+                            </div>
+                            <ul class="course-features">
+                                <li>Complete Exam Syllabus</li>
+                                <li>Previous Year Question Analysis</li>
+                                <li>Monthly Mock Tests</li>
+                            </ul>
+                            <div class="course-footer">
+                                <span class="course-price">[Price TBD]</span>
+                                <button class="btn btn-secondary">View Programme</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level 4 -->
+                    <div class="course-card">
+                        <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop');"></div>
+                        <div class="course-content">
+                            <h3>Level 4 Comprehensive</h3>
+                            <p class="course-desc">The complete package for dedicated aspirants.</p>
+                            <div class="course-meta">
+                                <span><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> [Duration TBD]</span>
+                            </div>
+                            <ul class="course-features">
+                                <li>All Level 1-3 Features</li>
+                                <li>Full Length Model Tests</li>
+                                <li>Revision Masterclasses</li>
+                            </ul>
+                            <div class="course-footer">
+                                <span class="course-price">[Price TBD]</span>
+                                <button class="btn btn-secondary">View Programme</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level 4 Pro -->
+                    <div class="course-card pro">
+                        <div class="course-badge">PREMIUM</div>
+                        <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1628595351029-c2bf17511435?q=80&w=600&auto=format&fit=crop');"></div>
+                        <div class="course-content">
+                            <h3>Level 4 Pro</h3>
+                            <p class="course-desc">Elite preparation with personalized mentorship and advanced tools.</p>
+                            <div class="course-meta">
+                                <span><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> [Duration TBD]</span>
+                            </div>
+                            <ul class="course-features">
+                                <li>Includes Pro Molds Tests</li>
+                                <li>1-on-1 Faculty Mentorship</li>
+                                <li>Interview Preparation Module</li>
+                            </ul>
+                            <div class="course-footer">
+                                <span class="course-price">[Price TBD]</span>
+                                <button class="btn btn-gold">View Programme</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level 5 -->
+                    <div class="course-card">
+                        <div class="course-img" style="background-image: url('https://images.unsplash.com/photo-1582560475093-ba66accbc424?q=80&w=600&auto=format&fit=crop');"></div>
+                        <div class="course-content">
+                            <h3>Level 5 Research</h3>
+                            <p class="course-desc">Specialized modules oriented towards research and ARS Mains.</p>
+                            <div class="course-meta">
+                                <span><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> [Duration TBD]</span>
+                            </div>
+                            <ul class="course-features">
+                                <li>Advanced Research Methodologies</li>
+                                <li>Descriptive Answer Writing</li>
+                                <li>ARS Specific Resources</li>
+                            </ul>
+                            <div class="course-footer">
+                                <span class="course-price">[Price TBD]</span>
+                                <button class="btn btn-secondary">View Programme</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="explore-all-wrap reveal">
+                    <button class="btn btn-primary">Explore All Courses</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding syllabus-section" id="syllabus">
+            <div class="container">
+                <span class="eyebrow" style="text-align: center;">Curriculum Overview</span>
+                <h2 class="section-title reveal">A Clear Roadmap from Fundamentals to Advanced Concepts</h2>
+                
+                <div class="syllabus-grid reveal">
+                    <!-- Placeholder Unit 1 -->
+                    <div class="unit-card">
+                        <h4>Unit 1: [Placeholder Title] <span class="unit-time">[Time]</span></h4>
+                        <ul class="topic-list">
+                            <li>[Topic Placeholder A]</li>
+                            <li>[Topic Placeholder B]</li>
+                            <li>[Topic Placeholder C]</li>
+                        </ul>
+                    </div>
+                    <!-- Placeholder Unit 2 -->
+                    <div class="unit-card">
+                        <h4>Unit 2: [Placeholder Title] <span class="unit-time">[Time]</span></h4>
+                        <ul class="topic-list">
+                            <li>[Topic Placeholder A]</li>
+                            <li>[Topic Placeholder B]</li>
+                            <li>[Topic Placeholder C]</li>
+                        </ul>
+                    </div>
+                    <!-- Placeholder Unit 3 -->
+                    <div class="unit-card">
+                        <h4>Unit 3: [Placeholder Title] <span class="unit-time">[Time]</span></h4>
+                        <ul class="topic-list">
+                            <li>[Topic Placeholder A]</li>
+                            <li>[Topic Placeholder B]</li>
+                            <li>[Topic Placeholder C]</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem; position: relative; z-index: 2;">
+                    <button class="btn btn-secondary" style="background: white;">View Full Syllabus</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding resources-section" id="resources">
+            <div class="container">
+                <span class="eyebrow">Library</span>
+                <h2 class="section-title" style="text-align: left;">Knowledge Beyond the Classroom</h2>
+                <p class="section-subtitle" style="text-align: left; margin-left: 0; max-width: 600px;">Access approved materials, previous year questions, and curated revision notes to supplement your learning.</p>
+                
+                <div class="resources-grid reveal">
+                    <!-- Resource 1 -->
+                    <div class="resource-card">
+                        <div class="resource-img" style="background-image: url('https://images.unsplash.com/photo-1532012197267-da84d127e765?q=80&w=400&auto=format&fit=crop');">
+                            <span class="resource-type">Book</span>
+                            <span class="resource-access access-free">Free Preview</span>
+                        </div>
+                        <div class="resource-content">
+                            <h4>[Book Title Placeholder]</h4>
+                            <p>Author/Editor: [Name]</p>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View Resource</button>
+                        </div>
+                    </div>
+                    <!-- Resource 2 -->
+                    <div class="resource-card">
+                        <div class="resource-img" style="background-image: url('https://images.unsplash.com/photo-1456324504439-367cee3b3c32?q=80&w=400&auto=format&fit=crop');">
+                            <span class="resource-type">Notes</span>
+                            <span class="resource-access access-pro">Enrolled Only</span>
+                        </div>
+                        <div class="resource-content">
+                            <h4>[Revision Notes Topic]</h4>
+                            <p>Module: [Module Name]</p>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View Resource</button>
+                        </div>
+                    </div>
+                    <!-- Resource 3 -->
+                    <div class="resource-card">
+                        <div class="resource-img" style="background-image: url('https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=400&auto=format&fit=crop');">
+                            <span class="resource-type">PYQ</span>
+                            <span class="resource-access access-free">Free</span>
+                        </div>
+                        <div class="resource-content">
+                            <h4>[Year] NET Question Paper</h4>
+                            <p>With official answer key</p>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View Resource</button>
+                        </div>
+                    </div>
+                    <!-- Resource 4 -->
+                    <div class="resource-card">
+                        <div class="resource-img" style="background-image: url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=400&auto=format&fit=crop');">
+                            <span class="resource-type">Video</span>
+                            <span class="resource-access access-pro">Enrolled Only</span>
+                        </div>
+                        <div class="resource-content">
+                            <h4>[Research Topic Discussion]</h4>
+                            <p>Special Lecture Series</p>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">View Resource</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding achievements-section" id="achievements">
+            <div class="container">
+                <span class="eyebrow" style="text-align: center;">Hall of Fame</span>
+                <h2 class="section-title reveal">Celebrating Knowledge, Dedication and Success</h2>
+                
+                <h3 style="text-align: center; margin: 3rem 0 2rem; font-family: var(--font-body); font-size: 1.2rem; color: var(--botanical);">ARS Interview Achievers</h3>
+                <div class="achievers-grid reveal">
+                    <!-- Placeholder profiles as client supplies data -->
+                    <div class="achiever-card">
+                        <div class="achiever-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop" alt="Student Placeholder" class="achiever-img">
+                        </div>
+                        <div class="achiever-name">[Student Name]</div>
+                        <div class="achiever-exam">ARS Interview</div>
+                    </div>
+                    <div class="achiever-card">
+                        <div class="achiever-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop" alt="Student Placeholder" class="achiever-img">
+                        </div>
+                        <div class="achiever-name">[Student Name]</div>
+                        <div class="achiever-exam">ARS Interview</div>
+                    </div>
+                    <div class="achiever-card">
+                        <div class="achiever-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" alt="Student Placeholder" class="achiever-img">
+                        </div>
+                        <div class="achiever-name">[Student Name]</div>
+                        <div class="achiever-exam">ARS Interview</div>
+                    </div>
+                    <div class="achiever-card">
+                        <div class="achiever-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop" alt="Student Placeholder" class="achiever-img">
+                        </div>
+                        <div class="achiever-name">[Student Name]</div>
+                        <div class="achiever-exam">ARS Interview</div>
+                    </div>
+                </div>
+
+                <div class="text-lists-container reveal">
+                    <div class="name-list">
+                        <h4>30 ARS Mains Qualifiers</h4>
+                        <div class="name-grid">
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                        </div>
+                        <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #777;">+ 22 more qualifiers</p>
+                    </div>
+                    <div class="name-list">
+                        <h4>45+ NET Qualifiers</h4>
+                        <div class="name-grid">
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                            <span>[Name Placeholder]</span><span>[Name Placeholder]</span>
+                        </div>
+                        <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #777;">+ 37 more qualifiers</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn btn-secondary">Meet All Achievers</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding about-faculty-section" id="about">
+            <div class="container">
+                <div class="about-content reveal">
+                    <div class="about-text">
+                        <span class="eyebrow">Our Story</span>
+                        <h2 class="section-title" style="text-align: left;">A Vision Rooted in Plant Science</h2>
+                        <p>Geeky Researcher began with the shared vision of Nirmal Raj and N.H. Shankar Reddy to make quality knowledge more accessible.</p>
+                        <p>What started as an educational initiative in Plant Science and Plant Pathology developed into a focused learning platform built around conceptual understanding, competitive examination preparation, and research-oriented learning.</p>
+                        <div class="about-quote">"One Subject. One Platform."</div>
+                        <button class="btn btn-primary">Discover Our Story</button>
+                    </div>
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1530836369250-ef71a3f5e4bf?q=80&w=800&auto=format&fit=crop" alt="Botanical Science">
+                    </div>
+                </div>
+
+                <div class="faculty-section reveal">
+                    <span class="eyebrow" style="text-align: center;">Our Team</span>
+                    <h2 class="section-title">Guided by Academic Experience</h2>
+                    
+                    <div class="faculty-grid">
+                        <!-- Faculty 1 -->
+                        <div class="faculty-card">
+                            <img src="https://placehold.co/200x200/e9f0e7/123d2b?text=NSR" alt="N.H. Shankar Reddy" class="faculty-img">
+                            <h4>N.H. Shankar Reddy</h4>
+                            <div class="faculty-role">Founder & Tutor</div>
+                            <div class="faculty-qual">Ph.D., Plant Pathology</div>
+                        </div>
+                        <!-- Faculty 2 -->
+                        <div class="faculty-card">
+                            <img src="https://placehold.co/200x200/e9f0e7/123d2b?text=RNR" alt="Dr. R. Nirmala Raj" class="faculty-img">
+                            <h4>Dr. R. Nirmala Raj</h4>
+                            <div class="faculty-role">Founder</div>
+                            <div class="faculty-qual">Ph.D., Genetics & Plant Breeding</div>
+                        </div>
+                        <!-- Faculty 3 -->
+                        <div class="faculty-card">
+                            <img src="https://placehold.co/200x200/e9f0e7/123d2b?text=MGR" alt="Dr. M. Gurivi Reddy" class="faculty-img">
+                            <h4>Dr. M. Gurivi Reddy</h4>
+                            <div class="faculty-role">Visiting Member</div>
+                            <div class="faculty-qual">Ph.D., Plant Pathology</div>
+                        </div>
+                        <!-- Faculty 4 -->
+                        <div class="faculty-card">
+                            <img src="https://placehold.co/200x200/e9f0e7/123d2b?text=GS" alt="Mr. G. Somasekhar" class="faculty-img">
+                            <h4>Mr. G. Somasekhar</h4>
+                            <div class="faculty-role">Financial Advisor</div>
+                            <div class="faculty-qual">[Qualifications]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <img src="https://images.unsplash.com/photo-1599427288764-a78b532bfbc2?q=80&w=400&auto=format&fit=crop" class="cta-bg-leaf leaf-1" alt="Leaf design">
+            <img src="https://images.unsplash.com/photo-1611736657904-8979313a45c3?q=80&w=400&auto=format&fit=crop" class="cta-bg-leaf leaf-2" alt="Leaf design">
+            
+            <div class="container cta-content reveal">
+                <h2>Take the Next Step in Your Plant Pathology Journey.</h2>
+                <p>Explore your learning level, strengthen your concepts, and prepare with a structured approach designed for real academic growth.</p>
+                <div class="cta-buttons" style="display: flex; justify-content: center; gap: 1rem;">
+                    <button class="btn btn-gold">Explore Courses</button>
+                    <button class="btn btn-secondary">Login / Enroll</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1.2-12.7c-.5-.9-1.3-1.6-2.3-1.9-.3-.1-.6.1-.7.3-.1.3.1.6.3.7.8.2 1.4.8 1.8 1.5.2.4.6.6 1 .5.4-.1.7-.5.5-1.1zm2.4.9c0-.4.3-.7.7-.7h.1c.4 0 .7.3.7.7v3.3h-1.5v-3.3zm-3.6 4.6c.3 0 .5.2.5.5v2.8c0 .3-.2.5-.5.5s-.5-.2-.5-.5V15.3c0-.3.2-.5.5-.5zm6.7-1.1c-.2-.2-.5-.2-.7 0l-1.5 1.5v-1.1c0-.4-.3-.7-.7-.7h-2.2c-.4 0-.7.3-.7.7v1.1l-1.5-1.5c-.2-.2-.5-.2-.7 0-.2.2-.2.5 0 .7l2.2 2.2V19c0 .4.3.7.7.7h1.5c.4 0 .7-.3.7-.7v-1.1l2.2-2.2c.2-.2.2-.5 0-.7z"/>
+                        </svg>
+                        Geeky Researcher
+                    </a>
+                    <div class="footer-tagline">One Subject. One Platform.</div>
+                    <p class="footer-desc">A specialized learning platform built around conceptual understanding, competitive examination preparation, and research-oriented learning in Plant Pathology.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Explore</h4>
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#courses">Courses</a></li>
+                        <li><a href="#syllabus">Syllabus</a></li>
+                        <li><a href="#achievements">Achievements</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Learning</h4>
+                    <ul>
+                        <li><a href="#">Recorded Classes</a></li>
+                        <li><a href="#">Practice Tests</a></li>
+                        <li><a href="#">Previous-Year Questions</a></li>
+                        <li><a href="#">Revision Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Login</a></li>
+                        <li><a href="#">Enrollment</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Geeky Researcher. All rights reserved.</p>
+                <div class="social-links" style="display: flex; gap: 1rem;">
+                    <!-- Placeholders for actual social links -->
+                    <a href="#">LinkedIn</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Sticky Navigation
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // 2. Mobile Menu Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const navLinks = document.getElementById('nav-links');
+            
+            mobileBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('mobile-active');
+            });
+
+            // Close mobile menu when clicking a link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('mobile-active');
+                });
+            });
+
+            // 3. 3D Parallax Effect (Hero Section)
+            const hero3D = document.getElementById('hero-3d');
+            const layers = document.querySelectorAll('.layer');
+            
+            // Generate ambient spores
+            const sporesContainer = document.getElementById('spores-container');
+            for(let i = 0; i < 30; i++) {
+                const spore = document.createElement('div');
+                spore.classList.add('spore');
+                // Random size, position, and animation delay
+                const size = Math.random() * 6 + 2;
+                spore.style.width = `${size}px`;
+                spore.style.height = `${size}px`;
+                spore.style.left = `${Math.random() * 100}%`;
+                spore.style.top = `${Math.random() * 100}%`;
+                spore.style.animation = `float ${Math.random() * 3 + 3}s ease-in-out infinite alternate`;
+                spore.style.animationDelay = `${Math.random() * 2}s`;
+                sporesContainer.appendChild(spore);
+            }
+
+            // Mouse tracking parallax
+            if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+                document.addEventListener('mousemove', (e) => {
+                    const rect = hero3D.getBoundingClientRect();
+                    // Only calculate if hero is visible to save performance
+                    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+                    
+                    const x = e.clientX - window.innerWidth / 2;
+                    const y = e.clientY - window.innerHeight / 2;
+
+                    layers.forEach(layer => {
+                        const depth = parseFloat(layer.getAttribute('data-depth'));
+                        const moveX = (x * depth) / 10;
+                        const moveY = (y * depth) / 10;
+                        
+                        // Preserve base transforms for specific elements while adding mouse move
+                        if(layer.classList.contains('leaf-main')) {
+                            layer.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px)) rotate(-15deg)`;
+                        } else if(layer.classList.contains('leaf-sub')) {
+                            layer.style.transform = `translate(calc(-10% + ${moveX}px), calc(30% + ${moveY}px)) translateZ(80px) rotate(25deg)`;
+                        } else if(layer.classList.contains('circle-bg')) {
+                            layer.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px)) translateZ(-100px)`;
+                        } else {
+                            layer.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                        }
+                    });
+                });
+            }
+
+            // 4. Scroll Reveal Animations & Number Counters
+            const revealElements = document.querySelectorAll('.reveal');
+            const counters = document.querySelectorAll('.counter');
+            let hasCounted = false;
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // Trigger counters if this is the stats section
+                        if (entry.target.classList.contains('stats-section') && !hasCounted) {
+                            runCounters();
+                            hasCounted = true;
+                        }
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            revealElements.forEach(el => revealObserver.observe(el));
+            
+            // Also observe stats specifically if it doesn't have reveal class
+            const statsSection = document.querySelector('.stats-section');
+            if(statsSection) revealObserver.observe(statsSection);
+
+            // Counter Logic
+            function runCounters() {
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 2000; // ms
+                    const increment = target / (duration / 16); // 60fps
+                    
+                    let current = 0;
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.innerText = Math.ceil(current);
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCounter();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
